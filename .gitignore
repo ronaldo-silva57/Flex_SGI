@@ -1,0 +1,71 @@
+# Ambiente e credenciais
+.env
+.env.*
+!.env.example
+/auth.json
+
+# Dependências
+/vendor/
+/node_modules/
+
+# Laravel: cache, sessões, logs e arquivos gerados
+/storage/*.key
+/storage/app/private/
+/storage/app/public/*
+!/storage/app/public/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/pail/
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/public/storage
+
+# Vite / Tailwind
+/public/build/
+/public/hot
+/public/fonts-manifest.dev.json
+
+# Testes e ferramentas PHP
+.phpunit.result.cache
+.phpunit-watcher.yml
+/.phpunit.cache/
+.phpactor.json
+_ide_helper.php
+.phpunit.cache
+/coverage/
+
+# Backups e dumps locais (não armazenar dados reais no Git)
+*.sql
+*.sql.gz
+*.dump
+*.backup
+*.bak
+
+# IDEs e assistentes
+/.codex/
+/.cursor/
+/.idea/
+/.nova/
+/.vscode/
+/.zed/
+
+# PM2 e arquivos temporários
+*.log
+*.pid
+*.pid.lock
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Homestead
+Homestead.json
+Homestead.yaml
