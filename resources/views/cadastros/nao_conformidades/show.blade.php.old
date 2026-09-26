@@ -1,0 +1,238 @@
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center gap-2">
+                <i class="fas fa-eye text-blue-500"></i>Detalhes da Não Conformidade
+                <span class="ml-2 text-sm font-mono bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+                    {{ $naoConformidade->codigo }}
+                </span>
+            </h2>
+            <div class="flex space-x-4">
+                <a href="{{ route('nao_conformidades.index') }}"
+                    class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition shadow-sm border border-blue-200">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar
+                </a>
+                <a href="{{ route('nao_conformidades.edit', $naoConformidade) }}"
+                    class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition shadow-sm">
+                    <i class="fas fa-edit mr-2"></i>Editar
+                </a>
+            </div>
+        </div>
+    </x-slot>
+
+    @php
+        $nc = $naoConformidade;
+        $gravidadeClasses = [
+            'Baixa'   => 'bg-blue-100 text-blue-800',
+            'Media'   => 'bg-yellow-100 text-yellow-800',
+            'Alta'    => 'bg-orange-100 text-orange-800',
+            'Crítica' => 'bg-red-100 text-red-800',
+        ][$nc->gravidade] ?? 'bg-gray-100 text-gray-800';
+        $statusClasses = [
+            'Aberta'      => 'bg-red-100 text-red-800',
+            'Em analise'  => 'bg-yellow-100 text-yellow-800',
+            'Em ação'     => 'bg-blue-100 text-blue-800',
+            'Verificação' => 'bg-purple-100 text-purple-800',
+            'Fechada'     => 'bg-green-100 text-green-800',
+        ][$nc->status] ?? 'bg-gray-100 text-gray-800';
+    @endphp
+
+    <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
+        {{-- Cabeçalho / Resumo --}}
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900">{{ $nc->titulo }}</h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        <i class="fas fa-tags mr-1"></i>{{ $nc->tipo ?? 'Não Conformidade' }}
+                        @if($nc->recorrente)
+                            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+                                <i class="fas fa-redo mr-1"></i>Recorrente
+                            </span>
+                        @endif
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {{ $gravidadeClasses }}">
+                        <i class="fas fa-exclamation-circle mr-1"></i>{{ $nc->gravidade ?? 'Sem gravidade' }}
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {{ $statusClasses }}">
+                        <i class="fas fa-toggle-on mr-1"></i>{{ $nc->status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Classificação --}}
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-sitemap text-red-500"></i> Classificação
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Empresa</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">{{ $nc->empresa->razao_social ?? 'N/A' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Cliente</span>
+                    <span class="mt-1 block text-gray-900">{{ $nc->cliente->razao_social ?? ($nc->cliente->nome ?? '-') }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Norma</span>
+                    <span class="mt-1 block text-gray-900">{{ $nc->norma->codigo ?? '-' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Cláusula</span>
+                    <span class="mt-1 block text-gray-900">{{ $nc->clausula->descricao ?? '-' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Processo</span>
+                    <span class="mt-1 block text-gray-900">{{ $nc->processo->nome ?? '-' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Origem</span>
+                    <span class="mt-1 block text-gray-900">{{ $nc->origem }}</span>
+                </div>
+                <div class="lg:col-span-3">
+                    <span class="block text-sm font-medium text-gray-500">Local da Ocorrência</span>
+                    <span class="mt-1 block text-gray-900">{{ $nc->local_ocorrencia ?? '-' }}</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Responsáveis --}}
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-user-friends text-red-500"></i> Responsáveis
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Responsável pela Apuração</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">{{ $nc->responsavelApuracao->name ?? '-' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Responsável pelo Tratamento</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">{{ $nc->responsavelTratamento->name ?? '-' }}</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Descrição --}}
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-clipboard-list text-red-500"></i> Descrição da Ocorrência
+            </h4>
+            <div class="space-y-4">
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Descrição</span>
+                    <p class="mt-1 text-gray-800 whitespace-pre-line">{{ $nc->descricao }}</p>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Requisito Não Atendido</span>
+                    <p class="mt-1 text-gray-800 whitespace-pre-line">{{ $nc->requisito_nao_atendido ?? 'Não informado' }}</p>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Evidência Inicial</span>
+                    <p class="mt-1 text-gray-800 whitespace-pre-line">{{ $nc->evidencia_inicial ?? 'Não informada' }}</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- Avaliação --}}
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-chart-line text-red-500"></i> Avaliação
+            </h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Gravidade</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">{{ $nc->gravidade ?? '-' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Probabilidade</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">{{ $nc->probabilidade ?? '-' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Prioridade</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">{{ $nc->prioridade ?? '-' }}</span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Recorrente</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">{{ $nc->recorrente ? 'Sim' : 'Não' }}</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Datas --}}
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                <i class="fas fa-calendar-alt text-red-500"></i> Datas
+            </h4>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Identificação</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">
+                        {{ $nc->data_identificacao?->format('d/m/Y') ?? '-' }}
+                    </span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Abertura</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">
+                        {{ $nc->data_abertura?->format('d/m/Y') ?? '-' }}
+                    </span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Prazo para Tratamento</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">
+                        {{ $nc->prazo_tratamento?->format('d/m/Y') ?? '-' }}
+                    </span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Análise</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">
+                        {{ $nc->data_analise?->format('d/m/Y') ?? '-' }}
+                    </span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Verificação</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">
+                        {{ $nc->data_verificacao?->format('d/m/Y') ?? '-' }}
+                    </span>
+                </div>
+                <div>
+                    <span class="block text-sm font-medium text-gray-500">Encerramento</span>
+                    <span class="mt-1 block text-gray-900 font-semibold">
+                        {{ $nc->data_encerramento?->format('d/m/Y') ?? '-' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {{-- Encerramento --}}
+        @if($nc->justificativa_encerramento)
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2">
+                    <i class="fas fa-flag-checkered text-red-500"></i> Encerramento
+                </h4>
+                <p class="text-gray-800 whitespace-pre-line">{{ $nc->justificativa_encerramento }}</p>
+            </div>
+        @endif
+
+        {{-- Rodapé / Ações --}}
+        <div class="bg-white p-4 rounded-lg shadow-sm flex justify-between items-center">
+            <div class="text-xs text-gray-500">
+                <div>Criado em: {{ $nc->created_at?->format('d/m/Y H:i') }}</div>
+                <div>Atualizado em: {{ $nc->updated_at?->format('d/m/Y H:i') }}</div>
+            </div>
+            <form action="{{ route('nao_conformidades.destroy', $nc) }}" method="POST"
+                  onsubmit="return confirm('Tem certeza que deseja excluir esta não conformidade?')">
+                @csrf @method('DELETE')
+                <button type="submit"
+                        class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+                    <i class="fas fa-trash mr-2"></i> Excluir
+                </button>
+            </form>
+        </div>
+    </div>
+</x-app-layout>
