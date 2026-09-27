@@ -388,7 +388,7 @@
                         <i class="fas fa-screwdriver-wrench text-orange-500"></i>
                         Ações Corretivas
                     </h4>
-                    <a href="{{ route('acoes_corretivas.create', ['naoConformidade' => $naoConformidade->id]) }}"
+                    <a href="{{ route('acoes_corretivas.create', ['nao_conformidade_id' => $naoConformidade->id]) }}"
                        class="inline-flex items-center px-3 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition shadow-sm text-sm">
                         <i class="fas fa-plus mr-2"></i>Nova Ação
                     </a>

@@ -341,12 +341,12 @@
                                         <a href="{{ route('nao_conformidades.show', $nc) }}"
                                            class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition"
                                            title="Visualizar" aria-label="Visualizar">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="fas fa-eye"></i>Visualizar
                                         </a>
                                         <a href="{{ route('nao_conformidades.edit', $nc) }}"
                                            class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-md transition"
                                            title="Editar" aria-label="Editar">
-                                            <i class="fas fa-pen"></i>
+                                            <i class="fas fa-pen"></i>Editar
                                         </a>
                                         <form action="{{ route('nao_conformidades.destroy', $nc) }}"
                                               method="POST"
@@ -356,7 +356,7 @@
                                             <button type="submit"
                                                     class="p-2 text-red-600 hover:bg-red-50 rounded-md transition"
                                                     title="Excluir" aria-label="Excluir">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="fas fa-trash"></i>Excluir
                                             </button>
                                         </form>
                                     </div>

@@ -87,8 +87,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('processos', ProcessoController::class);
     Route::resource('riscos_oportunidades', RiscoOportunidadeController::class);
     Route::resource('monitoramentos', MonitoramentoController::class);
-    Route::get('acoes_corretivas', [AcaoCorretivaController::class, 'indexGeral'])
-    ->name('acoes_corretivas.geral');
+    Route::get('acoes_corretivas/geral', [AcaoCorretivaController::class, 'indexGeral'])
+        ->name('acoes_corretivas.geral');
 
     Route::resource('analises_causa', AnaliseCausaController::class)
         ->parameters(['analises_causa' => 'analiseCausa']);
@@ -104,25 +104,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('sync.ishikawa');
         });
 
-    // Rota original de Não Conformidades
-    Route::resource('nao_conformidades', NaoConformidadeController::class);
-
-    Route::prefix('nao_conformidades/{naoConformidade}')->group(function () {
-        Route::resource('analises_causa', AnaliseCausaController::class)
-            ->shallow()
-            ->parameters(['analises_causa' => 'analiseCausa']);
-
-        Route::resource('acoes_corretivas', AcaoCorretivaController::class)
-            ->shallow()
-            ->parameters(['acoes_corretivas' => 'acaoCorretiva']);
-    });
-
+    // Não Conformidades
     Route::get(
         'nao_conformidades/{naoConformidade}/relatorio.pdf',
         [RelatorioNaoConformidadeController::class, 'pdf']
     )->name('nao_conformidades.relatorio.pdf');
 
-    Route::resource('acoes_corretivas', AcaoCorretivaController::class)->parameters(['acoes_corretivas' => 'acaoCorretiva']);
+    Route::resource(
+        'nao_conformidades',
+        NaoConformidadeController::class
+    )->parameters([
+        'nao_conformidades' => 'naoConformidade',
+    ]);
+
+    // Ações Corretivas
+    Route::resource(
+        'acoes_corretivas',
+        AcaoCorretivaController::class
+    )->parameters([
+        'acoes_corretivas' => 'acaoCorretiva',
+    ]);
+
     Route::resource('auditorias_itens', AuditoriaItemController::class)->parameters(['auditorias_itens' => 'auditoriaItem']);
     Route::resource('auditorias', AuditoriaController::class);
     Route::resource('indicadores', IndicadorController::class)->parameters(['indicadores' => 'indicador']);
@@ -154,10 +156,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('objetivos_ambientais', ObjetivoAmbientalController::class);
     Route::resource('produtos_quimicos', ProdutoQuimicoController::class);
     Route::resource('nao_conformidades_ambientais', NaoConformidadeAmbientalController::class);
-Route::resource('indicadores_ambientais', IndicadorAmbientalController::class)
-    ->parameters(['indicadores_ambientais' => 'indicadorAmbiental']);
-
-
+    Route::resource('indicadores_ambientais', IndicadorAmbientalController::class)
+        ->parameters(['indicadores_ambientais' => 'indicadorAmbiental']);
 
     // Histórico de Alterações (somente leitura)
     Route::resource('historico_alteracoes', HistoricoAlteracaoController::class)
@@ -181,6 +181,7 @@ Route::resource('indicadores_ambientais', IndicadorAmbientalController::class)
         Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
         Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
     });
+
 });
 
 require __DIR__.'/auth.php';

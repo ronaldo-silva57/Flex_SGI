@@ -109,28 +109,35 @@ class NaoConformidadeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
-    {
-        // Se vier via query string (hub da NC), pré-seleciona
-        $ncPreSelecionada = $request->filled('nao_conformidade_id')
-            ? NaoConformidade::find($request->input('nao_conformidade_id'))
-            : null;
+public function create(): View
+{
+    $empresaId = auth()->user()->empresa_id ?? null;
 
-        // Se não tiver pré-selecionada, carrega lista reduzida para o select
-        $naoConformidades = $ncPreSelecionada
-            ? collect() // não precisa carregar tudo
-            : NaoConformidade::with([])
-                ->orderByDesc('created_at')
-                ->limit(100)
-                ->get(['id', 'codigo', 'titulo']);
+    $empresa = $empresaId 
+        ? Empresa::find($empresaId) 
+        : Empresa::first();
 
-        $usuarios = User::orderBy('name')->get();
+    $clientes = Cliente::when($empresaId, fn ($q, $id) => $q->where('empresa_id', $id))
+        ->orderBy('razao_social')
+        ->get();
 
-        return view(
-            'iso9001.acoes_corretivas.create',
-            compact('naoConformidades', 'usuarios', 'ncPreSelecionada')
-        );
-    }
+    $normas = Norma::orderBy('nome')->get();
+    $clausulas = Clausula::orderBy('titulo')->get();
+    $processos = Processo::orderBy('nome')->get();
+
+    $usuarios = User::when($empresaId, fn ($q, $id) => $q->where('empresa_id', $id))
+        ->orderBy('name')
+        ->get();
+
+    return view('cadastros.nao_conformidades.create', compact(
+        'empresa',
+        'clientes',
+        'normas',
+        'clausulas',
+        'processos',
+        'usuarios'
+    ));
+}
 
     /**
      * Store a newly created resource in storage.
@@ -230,7 +237,7 @@ class NaoConformidadeController extends Controller
             'cor'   => 'purple',
             'titulo'=> "Análise de causa ({$a->metodo}) criada",
             'desc'  => $a->objetivo,
-            'url'   => route('analises_causa.show', [$nc, $a]),
+            'url' => route('analises_causa.show', $a),
         ]);
 
         if ($a->data_conclusao) {
@@ -241,7 +248,7 @@ class NaoConformidadeController extends Controller
                 'cor'   => 'green',
                 'titulo'=> "Análise de causa concluída",
                 'desc'  => $a->conclusao,
-                'url'   => route('analises_causa.show', [$nc, $a]),
+                'url' => route('analises_causa.show', $a),
             ]);
         }
     }
@@ -255,7 +262,7 @@ class NaoConformidadeController extends Controller
             'cor'   => 'orange',
             'titulo'=> "Ação corretiva [{$a->etapa}] criada",
             'desc'  => $a->descricao,
-            'url'   => route('acoes_corretivas.show', [$nc, $a]),
+            'url' => route('acoes_corretivas.show', $a),
         ]);
 
         if ($a->data_execucao) {
@@ -266,7 +273,7 @@ class NaoConformidadeController extends Controller
                 'cor'   => $a->eficaz ? 'green' : 'yellow',
                 'titulo'=> "Ação corretiva executada",
                 'desc'  => $a->eficaz ? 'Avaliada como eficaz' : 'Executada (eficácia não confirmada)',
-                'url'   => route('acoes_corretivas.show', [$nc, $a]),
+                'url' => route('acoes_corretivas.show', $a),
             ]);
         }
     }

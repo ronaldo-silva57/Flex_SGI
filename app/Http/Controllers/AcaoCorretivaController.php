@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Http\Requests\StoreAcaoCorretivaRequest;
 use App\Http\Requests\UpdateAcaoCorretivaRequest;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AcaoCorretivaController extends Controller
 {
@@ -50,14 +51,25 @@ class AcaoCorretivaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request): View
     {
-        $naoConformidades = NaoConformidade::orderBy('created_at', 'desc')->get();
+        // Veio via "Nova Ação" a partir do show da NC? (?nao_conformidade_id=123)
+        $ncPreSelecionada = $request->filled('nao_conformidade_id')
+            ? NaoConformidade::find($request->input('nao_conformidade_id'))
+            : null;
+
+        // Se já veio pré-selecionada, não precisa carregar lista
+        $naoConformidades = $ncPreSelecionada
+            ? collect()
+            : NaoConformidade::orderByDesc('created_at')
+                ->limit(100)
+                ->get(['id', 'codigo', 'titulo']);
+
         $usuarios = User::orderBy('name')->get();
 
         return view(
             'iso9001.acoes_corretivas.create',
-            compact('naoConformidades', 'usuarios')
+            compact('naoConformidades', 'usuarios', 'ncPreSelecionada')
         );
     }
 
