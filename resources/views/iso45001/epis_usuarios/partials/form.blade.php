@@ -146,3 +146,43 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const epiSelect = document.getElementById('epi_id');
+    const dataEntregaInput = document.getElementById('data_entrega');
+    const dataVencimentoInput = document.getElementById('data_vencimento');
+
+    // Mapeamento seguro usando a classe Js::from do Laravel
+    const epis = {{ \Illuminate\Support\Js::from($epis) }};
+    const episValidade = {};
+
+    if (Array.isArray(epis)) {
+        epis.forEach(function (epi) {
+            episValidade[epi.id] = epi.validade_meses;
+        });
+    }
+
+    function calcularVencimento() {
+        const epiId = epiSelect.value;
+        const validadeMeses = episValidade[epiId];
+        const dataEntregaVal = dataEntregaInput.value;
+
+        if (epiId && validadeMeses && dataEntregaVal) {
+            const data = new Date(dataEntregaVal + 'T00:00:00');
+            data.setMonth(data.getMonth() + parseInt(validadeMeses));
+
+            const ano = data.getFullYear();
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const dia = String(data.getDate()).padStart(2, '0');
+
+            dataVencimentoInput.value = `${ano}-${mes}-${dia}`;
+        }
+    }
+
+    if (epiSelect && dataEntregaInput && dataVencimentoInput) {
+        epiSelect.addEventListener('change', calcularVencimento);
+        dataEntregaInput.addEventListener('change', calcularVencimento);
+    }
+});
+</script>

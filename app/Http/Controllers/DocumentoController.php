@@ -58,7 +58,13 @@ class DocumentoController extends Controller
      */
     public function store(StoreDocumentoRequest $request)
     {
-        Documento::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('arquivo_path')) {
+            $data['arquivo_path'] = $request->file('arquivo_path')->store('documentos', 'public');
+        }
+
+        Documento::create($data);
 
         return redirect()
             ->route('documentos.index')
@@ -93,7 +99,21 @@ class DocumentoController extends Controller
      */
     public function update(UpdateDocumentoRequest $request, Documento $documento)
     {
-        $documento->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('arquivo_path')) {
+            // Remove o arquivo antigo do disco caso exista
+            if ($documento->arquivo_path && Storage::disk('public')->exists($documento->arquivo_path)) {
+                Storage::disk('public')->delete($documento->arquivo_path);
+            }
+
+            $data['arquivo_path'] = $request->file('arquivo_path')->store('documentos', 'public');
+        } else {
+            // Mantém o arquivo anterior se nenhum novo for enviado
+            unset($data['arquivo_path']);
+        }
+
+        $documento->update($data);
 
         return redirect()
             ->route('documentos.index')

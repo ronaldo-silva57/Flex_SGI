@@ -71,6 +71,9 @@
                                 <i class="fas fa-tag mr-1"></i>Tipo
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <i class="fas fa-paperclip mr-1"></i>Anexo
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <i class="fas fa-code-branch mr-1"></i>Versão
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -97,6 +100,19 @@
                                     <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         {{ $documento->tipo }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    @if ($documento->arquivo_path)
+                                        <a href="{{ Storage::url($documento->arquivo_path) }}" 
+                                        target="_blank" 
+                                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-md border border-blue-200 transition"
+                                        title="Baixar / Visualizar arquivo">
+                                            <i class="fas fa-download text-blue-500"></i>
+                                            <span>Baixar</span>
+                                        </a>
+                                    @else
+                                        <span class="text-xs text-gray-400 italic">Sem anexo</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                     {{ $documento->versao }}

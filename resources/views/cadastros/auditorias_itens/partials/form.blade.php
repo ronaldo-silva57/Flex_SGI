@@ -20,7 +20,7 @@
                         <option value="">Selecione a auditoria...</option>
                         @foreach($auditorias as $auditoria)
                             <option value="{{ $auditoria->id }}" {{ old('auditoria_id', $auditoriaItem->auditoria_id ?? '') == $auditoria->id ? 'selected' : '' }}>
-                                {{ $auditoria->titulo ?? $auditoria->empresa->nome ?? 'Auditoria #' . $auditoria->id }}
+                                Auditoria #{{ $auditoria->id }} - {{ $auditoria->norma->nome ?? $auditoria->norma->codigo ?? 'Sem Norma' }} ({{ $auditoria->tipo }})
                             </option>
                         @endforeach
                     </select>
@@ -28,24 +28,24 @@
                 @error('auditoria_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
 
-            <div class="w-full md:w-[calc(50%-0.5rem)]">
-                <label for="clausula_id" class="block text-sm font-medium text-gray-700">Cláusula</label>
-                <div class="relative mt-1">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-paragraph text-gray-400"></i>
-                    </div>
-                    <select id="clausula_id" name="clausula_id"
-                        class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('clausula_id') border-red-300 @enderror">
-                        <option value="">Selecione a cláusula...</option>
-                        @foreach($clausulas as $clausula)
-                            <option value="{{ $clausula->id }}" {{ old('clausula_id', $auditoriaItem->clausula_id ?? '') == $clausula->id ? 'selected' : '' }}>
-                                {{ $clausula->numero }} - {{ $clausula->titulo ?? $clausula->descricao }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                @error('clausula_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-            </div>
+<div class="w-full md:w-[calc(50%-0.5rem)]">
+    <label for="clausula_id" class="block text-sm font-medium text-gray-700">Cláusula</label>
+    <div class="relative mt-1">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-paragraph text-gray-400"></i>
+        </div>
+        <select id="clausula_id" name="clausula_id"
+            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('clausula_id') border-red-300 @enderror">
+            <option value="">Selecione a cláusula...</option>
+            @foreach($clausulas as $clausula)
+                <option value="{{ $clausula->id }}" {{ old('clausula_id', $auditoriaItem->clausula_id ?? '') == $clausula->id ? 'selected' : '' }}>
+                    {{ $clausula->codigo }} - {{ $clausula->titulo }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    @error('clausula_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+</div>
         </div>
 
         {{-- Linha 2: Processo + Auditor --}}

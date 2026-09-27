@@ -10,6 +10,7 @@ use App\Http\Requests\StoreEpiUsuarioRequest;
 use App\Http\Requests\UpdateEpiUsuarioRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class EpiUsuarioController extends Controller
 {
@@ -26,14 +27,15 @@ class EpiUsuarioController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('epi', function ($q) use ($search) {
-                $q->where('nome', 'LIKE', "%{$search}%");
-            })->orWhereHas('usuario', function ($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('epi', fn($e) => $e->where('nome', 'LIKE', "%{$search}%"))
+                  ->orWhereHas('usuario', fn($u) => $u->where('name', 'LIKE', "%{$search}%"));
             });
         }
 
-        $entregas = $query->with(['epi', 'usuario', 'responsavelEntrega'])->orderBy('created_at', 'desc')->paginate(15);
+        $entregas = $query->with(['epi', 'usuario', 'responsavelEntrega'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
 
         return view('iso45001.epis_usuarios.index', compact('entregas'));
     }
@@ -44,8 +46,9 @@ class EpiUsuarioController extends Controller
     public function create()
     {
         $empresa = Empresa::first();
-        $epis = Epi::where('empresa_id', $empresa->id)->orderBy('nome')->get();
-        $usuarios = User::all();
+        // Carrega epis com o atributo validade_meses para usar via JavaScript no Blade
+        $epis = Epi::where('empresa_id', $empresa->id)->where('ativo', true)->orderBy('nome')->get();
+        $usuarios = User::orderBy('name')->get();
         return view('iso45001.epis_usuarios.create', compact('empresa', 'epis', 'usuarios'));
     }
 
@@ -55,16 +58,34 @@ class EpiUsuarioController extends Controller
     public function store(StoreEpiUsuarioRequest $request)
     {
         $validated = $request->validated();
+
+        // 1. Define data de entrega como HOJE caso vazia
+        if (empty($validated['data_entrega'])) {
+            $validated['data_entrega'] = now()->format('Y-m-d');
+        }
+
+        // 2. Define o responsável pela entrega
         if (empty($validated['responsavel_entrega_id'])) {
             $validated['responsavel_entrega_id'] = Auth::id();
         }
+
+        // 3. Busca o EPI e calcula a Data de Vencimento caso não informada
+        $epi = Epi::findOrFail($validated['epi_id']);
+
+        if (empty($validated['data_vencimento']) && $epi->validade_meses) {
+            $dataEntrega = Carbon::parse($validated['data_entrega']);
+            $validated['data_vencimento'] = $dataEntrega->addMonths($epi->validade_meses)->format('Y-m-d');
+        }
+
+        // 4. Salva o registro no banco
         EpiUsuario::create($validated);
 
-        // Atualizar estoque do EPI (opcional)
-        $epi = Epi::find($validated['epi_id']);
-        $epi->increment('estoque_atual', $validated['quantidade'] ?? 1);
+        // 5. Baixa no estoque do EPI
+        $quantidade = $validated['quantidade'] ?? 1;
+        $epi->decrement('estoque_atual', $quantidade);
 
-        return redirect()->route('epis_usuarios.index')->with('success', 'Entrega de EPI registrada com sucesso.');
+        return redirect()->route('epis_usuarios.index')
+            ->with('success', 'Entrega de EPI registrada com sucesso.');
     }
 
     /**
@@ -82,7 +103,7 @@ class EpiUsuarioController extends Controller
     {
         $empresa = Empresa::find($episUsuario->epi->empresa_id);
         $epis = Epi::where('empresa_id', $empresa->id)->orderBy('nome')->get();
-        $usuarios = User::all();
+        $usuarios = User::orderBy('name')->get();
         return view('iso45001.epis_usuarios.edit', compact('episUsuario', 'empresa', 'epis', 'usuarios'));
     }
 
@@ -93,17 +114,20 @@ class EpiUsuarioController extends Controller
     {
         $validated = $request->validated();
 
-        // Ajustar estoque se quantidade mudou (exemplo simples)
         $oldQtde = $episUsuario->quantidade;
         $episUsuario->update($validated);
+
         $newQtde = $validated['quantidade'] ?? $oldQtde;
         $diff = $newQtde - $oldQtde;
+
         if ($diff != 0) {
             $epi = Epi::find($episUsuario->epi_id);
-            $epi->increment('estoque_atual', $diff);
+            // Se aumentou a quantidade entregue, diminui do estoque
+            $epi->decrement('estoque_atual', $diff);
         }
 
-        return redirect()->route('epis_usuarios.index')->with('success', 'Entrega de EPI atualizada com sucesso.');
+        return redirect()->route('epis_usuarios.index')
+            ->with('success', 'Entrega de EPI atualizada com sucesso.');
     }
 
     /**
@@ -111,11 +135,14 @@ class EpiUsuarioController extends Controller
      */
     public function destroy(EpiUsuario $episUsuario)
     {
-        // Devolver ao estoque
+        // Devolve a quantidade ao estoque ao excluir a entrega
         $epi = Epi::find($episUsuario->epi_id);
-        $epi->decrement('estoque_atual', $episUsuario->quantidade);
+        if ($epi) {
+            $epi->increment('estoque_atual', $episUsuario->quantidade);
+        }
 
         $episUsuario->delete();
-        return redirect()->route('epis_usuarios.index')->with('success', 'Registro de entrega excluído.');
+        return redirect()->route('epis_usuarios.index')
+            ->with('success', 'Registro de entrega excluído.');
     }
 }

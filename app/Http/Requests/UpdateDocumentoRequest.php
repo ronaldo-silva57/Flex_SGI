@@ -40,7 +40,7 @@ class UpdateDocumentoRequest extends FormRequest
             'tipo'              => ['required', 'in:Política,Procedimento,Instrução,Registro,Formulário,Manual,Outro'],
             'versao'            => ['required', 'string', 'max:10'],
             'conteudo'          => ['nullable', 'string'],
-            'arquivo_path'      => ['nullable', 'string', 'max:500'],
+            'arquivo_path'      => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,png,jpg', 'max:10240'],
             'status'            => ['required', 'in:Rascunho,Em revisão,Aprovado,Obsoleto'],
             'data_aprovacao'    => ['nullable', 'date'],
             'data_revisao'      => ['nullable', 'date'],

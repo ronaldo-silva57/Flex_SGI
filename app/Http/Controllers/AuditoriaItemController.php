@@ -51,10 +51,10 @@ class AuditoriaItemController extends Controller
      */
     public function create()
     {
-        $auditorias = Auditoria::orderBy('created_at', 'desc')->get();
-        $clausulas = Clausula::orderBy('codigo')->get();
-        $processos = Processo::orderBy('nome')->get();
-        $usuarios = User::orderBy('name')->get();
+        $auditorias = Auditoria::with('norma')->orderBy('created_at', 'desc')->get();
+        $clausulas  = Clausula::orderBy('codigo')->get();
+        $processos  = Processo::orderBy('nome')->get();
+        $usuarios   = User::orderBy('name')->get();
 
         return view(
             'cadastros.auditorias_itens.create',
@@ -94,10 +94,10 @@ class AuditoriaItemController extends Controller
      */
     public function edit(AuditoriaItem $auditoriaItem)
     {
-        $auditorias = Auditoria::orderBy('created_at', 'desc')->get();
-        $clausulas = Clausula::orderBy('codigo')->get();
-        $processos = Processo::orderBy('nome')->get();
-        $usuarios = User::orderBy('name')->get();
+        $auditorias = Auditoria::with('norma')->orderBy('created_at', 'desc')->get();
+        $clausulas  = Clausula::orderBy('codigo')->get();
+        $processos  = Processo::orderBy('nome')->get();
+        $usuarios   = User::orderBy('name')->get();
 
         return view(
             'cadastros.auditorias_itens.edit',

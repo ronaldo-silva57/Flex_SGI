@@ -1,23 +1,24 @@
 <?php
-// app/Http/Controllers/DashboardController.php
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
-    {
-        $empresaId = $request->input('empresa_id', 1);
+    public const FAIXAS = ['Vencido', '7 dias', '30 dias', '60 dias', '90 dias'];
 
-        // KPIs
+    public function index(Request $request): View
+    {
+        $empresaId = auth()->user()->empresa_id ?? 1;
+
         $kpis = DB::table('vw_kpis_executivos')
             ->where('empresa_id', $empresaId)
             ->first();
 
-        // Vencimentos por módulo e faixa
         $vencimentos = DB::table('vw_agenda_vencimentos')
             ->select('modulo', DB::raw("
                 CASE
@@ -35,7 +36,6 @@ class DashboardController extends Controller
             ->orderBy('modulo')
             ->get();
 
-        // NC por gravidade
         $ncGravidade = DB::table('nao_conformidades')
             ->select('gravidade', DB::raw('COUNT(*) as total'))
             ->where('empresa_id', $empresaId)
@@ -43,7 +43,6 @@ class DashboardController extends Controller
             ->groupBy('gravidade')
             ->get();
 
-        // NC por status
         $ncStatus = DB::table('nao_conformidades')
             ->select('status', DB::raw('COUNT(*) as total'))
             ->where('empresa_id', $empresaId)
@@ -51,7 +50,6 @@ class DashboardController extends Controller
             ->groupBy('status')
             ->get();
 
-        // Ações corretivas por etapa
         $acoes = DB::table('acoes_corretivas as ac')
             ->join('nao_conformidades as nc', 'nc.id', '=', 'ac.nao_conformidade_id')
             ->select('ac.etapa', 'ac.status', DB::raw('COUNT(*) as total'))
@@ -60,17 +58,13 @@ class DashboardController extends Controller
             ->groupBy('ac.etapa', 'ac.status')
             ->get();
 
-        // Indicadores meta x realizado
         $indicadores = DB::table('monitoramentos as m')
             ->join('indicadores as i', 'i.id', '=', 'm.indicador_id')
             ->select(
-                'i.codigo',
-                'i.nome',
-                'm.periodo_referencia',
+                'i.codigo', 'i.nome', 'm.periodo_referencia',
                 'm.valor_realizado',
                 DB::raw('COALESCE(m.valor_meta, i.meta) as meta'),
-                'i.tipo_meta',
-                'i.unidade_medida'
+                'i.tipo_meta', 'i.unidade_medida'
             )
             ->where('i.empresa_id', $empresaId)
             ->whereNull('m.deleted_at')
@@ -78,24 +72,9 @@ class DashboardController extends Controller
             ->limit(20)
             ->get();
 
-        // ESG
-        $esg = DB::table('esg_monitoramentos as em')
-            ->join('esg_indicadores as ei', 'ei.id', '=', 'em.esg_indicador_id')
-            ->select(
-                'ei.codigo',
-                'ei.nome',
-                'ei.dimensao',
-                'em.periodo_referencia',
-                'em.valor_realizado',
-                DB::raw('COALESCE(em.valor_meta, ei.meta) as meta'),
-                'ei.unidade_medida'
-            )
-            ->where('ei.empresa_id', $empresaId)
-            ->whereNull('em.deleted_at')
-            ->orderByDesc('em.periodo_referencia')
-            ->get();
+        // ESG removido — sem gráfico correspondente no Blade.
+        // Reative quando adicionar o card.
 
-        // Matriz de risco
         $matrizRisco = DB::table('riscos_oportunidades')
             ->select('probabilidade', 'impacto', DB::raw('COUNT(*) as total'))
             ->where('empresa_id', $empresaId)
@@ -104,7 +83,6 @@ class DashboardController extends Controller
             ->groupBy('probabilidade', 'impacto')
             ->get();
 
-        // Incidentes por mês
         $incidentes = DB::table('incidentes_acidentes')
             ->select(
                 DB::raw("TO_CHAR(data_ocorrencia, 'YYYY-MM') as mes"),
@@ -113,11 +91,11 @@ class DashboardController extends Controller
             )
             ->where('empresa_id', $empresaId)
             ->whereNull('deleted_at')
-            ->groupBy('mes')
-            ->orderBy('mes')
+            ->where('data_ocorrencia', '>=', Carbon::now()->subMonths(12)->startOfMonth())
+            ->groupByRaw("TO_CHAR(data_ocorrencia, 'YYYY-MM')")
+            ->orderByRaw("TO_CHAR(data_ocorrencia, 'YYYY-MM')")
             ->get();
 
-        // Auditorias por status
         $auditorias = DB::table('auditorias')
             ->select('status', DB::raw('COUNT(*) as total'))
             ->where('empresa_id', $empresaId)
@@ -125,7 +103,6 @@ class DashboardController extends Controller
             ->groupBy('status')
             ->get();
 
-        // Lista de vencimentos próximos
         $proximosVencimentos = DB::table('vw_agenda_vencimentos')
             ->where('empresa_id', $empresaId)
             ->whereBetween('dias_restantes', [-365, 30])
@@ -140,7 +117,6 @@ class DashboardController extends Controller
             'ncStatus',
             'acoes',
             'indicadores',
-            'esg',
             'matrizRisco',
             'incidentes',
             'auditorias',
