@@ -19,7 +19,11 @@
                                 ['nome' => 'Perigos e Riscos', 'icone' => 'fa-biohazard', 'cor' => 'bg-amber-700', 'rota' => route('perigos_riscos.index')],
                                 ['nome' => 'Incidentes/Acidentes', 'icone' => 'fa-triangle-exclamation', 'cor' => 'bg-red-600', 'rota' => route('incidentes_acidentes.index')],
                                 ['nome' => 'EPIs', 'icone' => 'fa-hard-hat', 'cor' => 'bg-yellow-600', 'rota' => route('epis.index')],
-                                ['nome' => 'EPIs - Usuários', 'icone' => 'fa-user-gear', 'cor' => 'bg-yellow-700', 'rota' => route('epis_usuarios.index')],        
+                                ['nome' => 'EPIs - Usuários', 'icone' => 'fa-user-gear', 'cor' => 'bg-yellow-700', 'rota' => route('epis_usuarios.index')],       
+                                
+                                
+                                ['nome' => 'Exames Médicos (ASO)', 'icone' => 'fa-user-md', 'cor' => 'bg-red-700', 'rota' => route('exames_medicos.index')],
+                                ['nome' => 'CIPA e Reuniões', 'icone' => 'fa-users-between-lines', 'cor' => 'bg-amber-600', 'rota' => route('cipa_reunioes.index')],
                             ];
                         @endphp
 

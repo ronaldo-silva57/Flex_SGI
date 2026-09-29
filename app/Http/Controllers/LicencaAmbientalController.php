@@ -34,7 +34,7 @@ class LicencaAmbientalController extends Controller
             $query->where('tipo', $request->input('tipo'));
         }
 
-        $licencas = $query->orderBy('data_validade', 'asc')->paginate(10);
+        $licencas = $query->orderBy('data_validade', 'asc')->paginate(15);
 
         return view('iso14001.licencas_ambientais.index', compact('licencas'));
     }

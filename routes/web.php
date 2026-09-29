@@ -44,6 +44,13 @@ use App\Http\Controllers\ProdutoQuimicoController;
 use App\Http\Controllers\NaoConformidadeAmbientalController;
 use App\Http\Controllers\IndicadorAmbientalController;
 
+use App\Http\Controllers\PlanoAcaoController;
+use App\Http\Controllers\ExameMedicoController;
+use App\Http\Controllers\MudancaGestaoController;
+use App\Http\Controllers\AvaliacaoFornecedorController;
+use App\Http\Controllers\AnaliseRiscoTiController;
+use App\Http\Controllers\CipaReuniaoController;
+
 use App\Http\Controllers\AnaliseCausaRespostaController;
 use App\Http\Controllers\AnaliseIshikawaController;
 use App\Http\Controllers\IshikawaCausaController;
@@ -146,6 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('stakeholders', StakeholderController::class);
     Route::resource('materialidade', MaterialidadeController::class);
     Route::resource('vinculos_normativos', VinculoNormativoController::class);
+    Route::resource('planos_acao', PlanoAcaoController::class);
 
     Route::resource('licencas_ambientais', LicencaAmbientalController::class)
         ->parameters(['licencas_ambientais' => 'licenca']);
@@ -158,6 +166,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('nao_conformidades_ambientais', NaoConformidadeAmbientalController::class);
     Route::resource('indicadores_ambientais', IndicadorAmbientalController::class)
         ->parameters(['indicadores_ambientais' => 'indicadorAmbiental']);
+
+    Route::resource('exames_medicos', ExameMedicoController::class);
+    Route::resource('mudancas_gestao', MudancaGestaoController::class);
+    Route::resource('avaliacoes_fornecedores', AvaliacaoFornecedorController::class);
+    Route::resource('analises_risco_ti', AnaliseRiscoTiController::class);
+    Route::resource('cipa_reunioes', CipaReuniaoController::class);
 
     // Histórico de Alterações (somente leitura)
     Route::resource('historico_alteracoes', HistoricoAlteracaoController::class)

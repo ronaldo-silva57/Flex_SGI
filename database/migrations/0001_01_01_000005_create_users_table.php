@@ -20,6 +20,12 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+
+            //Relacionamento com empresas
+            $table->foreignId('empresa_id')
+                ->nullable()
+                ->constrained('empresas')
+                ->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

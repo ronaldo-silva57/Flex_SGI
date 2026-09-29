@@ -54,7 +54,7 @@ class ProcessoController extends Controller
     public function create()
     {
         $departamentos = Departamento::orderBy('nome')->get();
-        $empresa = Empresa::find(auth()->user()->empresa_id ?? null) ?? Empresa::first();
+         (null) ?? Empresa::first();
         $processo = new Processo();
         return view('iso9001.processos.create', compact('processo', 'departamentos', 'empresa'));
     }

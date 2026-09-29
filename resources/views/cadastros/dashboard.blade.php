@@ -28,6 +28,11 @@
                             ['nome' => 'Riscos e Oportunidades', 'icone' => 'fa-scale-balanced', 'cor' => 'bg-amber-600', 'rota' => route('riscos_oportunidades.index')],
                             ['nome' => 'Auditorias', 'icone' => 'fa-clipboard-check', 'cor' => 'bg-violet-600', 'rota' => route('auditorias.index')],
                             ['nome' => 'Auditorias Itens', 'icone' => 'fa-tasks', 'cor' => 'bg-violet-500', 'rota' => route('auditorias_itens.index')],
+
+
+                            ['nome' => 'Planos de Ação (5W2H)', 'icone' => 'fa-tasks', 'cor' => 'bg-emerald-600', 'rota' => route('planos_acao.index')],
+                            ['nome' => 'Gestão de Mudanças', 'icone' => 'fa-code-compare', 'cor' => 'bg-blue-600', 'rota' => route('mudancas_gestao.index')],
+                            ['nome' => 'Avaliação Fornecedores', 'icone' => 'fa-star-half-stroke', 'cor' => 'bg-amber-800', 'rota' => route('avaliacoes_fornecedores.index')],
                         ];
                     @endphp
 

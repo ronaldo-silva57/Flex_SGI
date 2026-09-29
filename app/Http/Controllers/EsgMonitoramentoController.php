@@ -47,7 +47,7 @@ class EsgMonitoramentoController extends Controller
      */
     public function create()
     {
-        $empresa = Empresa::first(); // ou usar a lógica de multi-tenant
+        $empresa = Empresa::first(); 
         $indicadores = EsgIndicador::where('empresa_id', $empresa->id)
             ->where('ativo', true)
             ->orderBy('nome')
