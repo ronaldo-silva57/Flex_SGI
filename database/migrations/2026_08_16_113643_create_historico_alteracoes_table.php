@@ -23,7 +23,8 @@ return new class extends Migration
                 ->constrained('users')
                 ->nullOnDelete();
             $table->ipAddress('ip_address')->nullable();
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestampTz('created_at')->useCurrent();
+            $table->softDeletes();
 
             $table->index(['tabela', 'registro_id']);
 

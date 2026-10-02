@@ -32,7 +32,7 @@ return new class extends Migration
             $table->date('data_inicio')->nullable();
             $table->date('data_conclusao')->nullable();
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index(['nao_conformidade_id', 'metodo']);

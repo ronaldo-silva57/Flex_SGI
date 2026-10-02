@@ -22,6 +22,10 @@
                                 ['nome' => 'Indicadores', 'icone' => 'fa-chart-line', 'cor' => 'bg-emerald-600', 'rota' => route('indicadores.index')],
                                 ['nome' => 'Monitoramentos', 'icone' => 'fa-chart-pie', 'cor' => 'bg-teal-600', 'rota' => route('monitoramentos.index')],
                                 ['nome' => 'Reuniões Geral', 'icone' => 'fa-users', 'cor' => 'bg-sky-600', 'rota' => route('reunioes_gestao.index')],
+                                ['nome' => 'Pesquisa de Satisfação', 'icone' => 'fa-face-smile', 'cor' => 'bg-emerald-600', 'rota' => route('pesquisas_satisfacao.index')],
+                                ['nome' => 'Respostas Pesquisa de Satisfação', 'icone' => 'fa-face-smile', 'cor' => 'bg-emerald-600', 'rota' => route('pesquisas_satisfacao_respostas.index')],
+                                ['nome' => 'Equipamentos de Medição', 'icone' => 'fa-ruler-combined', 'cor' => 'bg-blue-600', 'rota' => route('equipamentos_medicao.index')],
+                                ['nome' => 'Calibrações', 'icone' => 'fa-ruler-combined', 'cor' => 'bg-blue-600', 'rota' => route('calibracoes.index')],     
                             ];
                         @endphp
 

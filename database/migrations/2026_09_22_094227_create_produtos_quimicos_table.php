@@ -40,7 +40,7 @@ return new class extends Migration {
             $table->string('arquivo_fispq_path', 500)->nullable();
             $table->enum('status', ['Ativo','Inativo','Descontinuado'])->default('Ativo');
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index(['empresa_id','status']);

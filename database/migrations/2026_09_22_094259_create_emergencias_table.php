@@ -34,7 +34,7 @@ return new class extends Migration {
             $table->enum('status', ['Aberto','Em atendimento','Controlado','Encerrado'])
                   ->default('Aberto');
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index(['empresa_id','status']);

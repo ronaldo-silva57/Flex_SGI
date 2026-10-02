@@ -19,8 +19,6 @@
                                 ['nome' => 'Ativos', 'icone' => 'fa-server', 'cor' => 'bg-cyan-700', 'rota' => route('ativos_informacao.index')],
                                 ['nome' => 'Segurança', 'icone' => 'fa-shield-halved', 'cor' => 'bg-blue-800', 'rota' => route('controles_seguranca.index')],
                                 ['nome' => 'Incidentes Segurança', 'icone' => 'fa-shield', 'cor' => 'bg-red-700', 'rota' => route('incidentes_seguranca.index')],
-
-
                                 ['nome' => 'Riscos de TI', 'icone' => 'fa-shield-cat', 'cor' => 'bg-indigo-700', 'rota' => route('analises_risco_ti.index')],
                             ];
                         @endphp

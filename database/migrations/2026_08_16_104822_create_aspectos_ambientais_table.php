@@ -31,7 +31,7 @@ return new class extends Migration
             $table->text('controle_existente')->nullable();
             $table->text('programa_gestao')->nullable();
             $table->enum('status', ['ativo', 'inativo'])->default('ativo');
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index('empresa_id');

@@ -1,4 +1,3 @@
-```blade
 <x-guest-layout>
 
     <div class="mb-6 text-center">
@@ -28,60 +27,27 @@
             <div>
                 <x-input-label for="name" :value="__('Nome')" />
 
-                <x-text-input
-                    id="name"
-                    class="block mt-1 w-full"
-                    type="text"
-                    name="name"
-                    :value="old('name')"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name"/>
 
-                <x-input-error
-                    :messages="$errors->get('name')"
-                    class="mt-2"
-                />
+                <x-input-error :messages="$errors->get('name')" class="mt-2"/>
             </div>
 
             {{-- E-mail --}}
             <div class="mt-4">
                 <x-input-label for="email" :value="__('E-mail')" />
 
-                <x-text-input
-                    id="email"
-                    class="block mt-1 w-full"
-                    type="email"
-                    name="email"
-                    :value="old('email')"
-                    required
-                    autocomplete="username"
-                />
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username"/>
 
-                <x-input-error
-                    :messages="$errors->get('email')"
-                    class="mt-2"
-                />
+                <x-input-error :messages="$errors->get('email')" class="mt-2"/>
             </div>
 
             {{-- Senha --}}
             <div class="mt-4">
                 <x-input-label for="password" :value="__('Senha')" />
 
-                <x-text-input
-                    id="password"
-                    class="block mt-1 w-full"
-                    type="password"
-                    name="password"
-                    required
-                    autocomplete="new-password"
-                />
+                <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password"/>
 
-                <x-input-error
-                    :messages="$errors->get('password')"
-                    class="mt-2"
-                />
+                <x-input-error :messages="$errors->get('password')" class="mt-2"/>
             </div>
 
             {{-- Confirmar senha --}}
@@ -91,19 +57,9 @@
                     :value="__('Confirmar senha')"
                 />
 
-                <x-text-input
-                    id="password_confirmation"
-                    class="block mt-1 w-full"
-                    type="password"
-                    name="password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
+                <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password"/>
 
-                <x-input-error
-                    :messages="$errors->get('password_confirmation')"
-                    class="mt-2"
-                />
+                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2"/>
             </div>
 
             {{-- Nível --}}
@@ -137,19 +93,9 @@
 
             {{-- Razão Social --}}
             <div>
-                <x-input-label
-                    for="razao_social"
-                    :value="__('Razão Social')"
-                />
+                <x-input-label for="razao_social" :value="__('Razão Social')"/>
 
-                <x-text-input
-                    id="razao_social"
-                    class="block mt-1 w-full"
-                    type="text"
-                    name="razao_social"
-                    :value="old('razao_social')"
-                    required
-                />
+                <x-text-input id="razao_social" class="block mt-1 w-full" type="text" name="razao_social" :value="old('razao_social')" required/>
 
                 <x-input-error
                     :messages="$errors->get('razao_social')"
@@ -164,13 +110,7 @@
                     :value="__('Nome Fantasia')"
                 />
 
-                <x-text-input
-                    id="nome_fantasia"
-                    class="block mt-1 w-full"
-                    type="text"
-                    name="nome_fantasia"
-                    :value="old('nome_fantasia')"
-                />
+                <x-text-input id="nome_fantasia" class="block mt-1 w-full" type="text" name="nome_fantasia" :value="old('nome_fantasia')"/>
 
                 <x-input-error
                     :messages="$errors->get('nome_fantasia')"
@@ -187,13 +127,7 @@
                         :value="__('CNPJ')"
                     />
 
-                    <x-text-input
-                        id="cnpj"
-                        class="block mt-1 w-full"
-                        type="text"
-                        name="cnpj"
-                        :value="old('cnpj')"
-                    />
+                    <x-text-input id="cnpj" class="block mt-1 w-full" type="text" name="cnpj" :value="old('cnpj')"/>
 
                     <x-input-error
                         :messages="$errors->get('cnpj')"
@@ -207,13 +141,7 @@
                         :value="__('Inscrição Estadual')"
                     />
 
-                    <x-text-input
-                        id="ie"
-                        class="block mt-1 w-full"
-                        type="text"
-                        name="ie"
-                        :value="old('ie')"
-                    />
+                    <x-text-input id="ie" class="block mt-1 w-full" type="text" name="ie" :value="old('ie')"/>
 
                     <x-input-error
                         :messages="$errors->get('ie')"
@@ -230,13 +158,7 @@
                     :value="__('Endereço')"
                 />
 
-                <x-text-input
-                    id="endereco"
-                    class="block mt-1 w-full"
-                    type="text"
-                    name="endereco"
-                    :value="old('endereco')"
-                />
+                <x-text-input id="endereco" class="block mt-1 w-full" type="text" name="endereco" :value="old('endereco')"/>
 
                 <x-input-error
                     :messages="$errors->get('endereco')"
@@ -253,13 +175,7 @@
                         :value="__('Cidade')"
                     />
 
-                    <x-text-input
-                        id="cidade"
-                        class="block mt-1 w-full"
-                        type="text"
-                        name="cidade"
-                        :value="old('cidade')"
-                    />
+                    <x-text-input id="cidade" class="block mt-1 w-full" type="text" name="cidade" :value="old('cidade')"/>
                 </div>
 
                 <div>
@@ -268,14 +184,7 @@
                         :value="__('UF')"
                     />
 
-                    <x-text-input
-                        id="estado"
-                        class="block mt-1 w-full uppercase"
-                        type="text"
-                        name="estado"
-                        maxlength="2"
-                        :value="old('estado')"
-                    />
+                    <x-text-input id="estado" class="block mt-1 w-full uppercase" type="text" name="estado" maxlength="2" :value="old('estado')"/>
                 </div>
 
                 <div>
@@ -284,13 +193,7 @@
                         :value="__('CEP')"
                     />
 
-                    <x-text-input
-                        id="cep"
-                        class="block mt-1 w-full"
-                        type="text"
-                        name="cep"
-                        :value="old('cep')"
-                    />
+                    <x-text-input id="cep" class="block mt-1 w-full" type="text" name="cep" :value="old('cep')"/>
                 </div>
 
             </div>
@@ -304,13 +207,7 @@
                         :value="__('Telefone')"
                     />
 
-                    <x-text-input
-                        id="telefone"
-                        class="block mt-1 w-full"
-                        type="text"
-                        name="telefone"
-                        :value="old('telefone')"
-                    />
+                    <x-text-input id="telefone" class="block mt-1 w-full" type="text" name="telefone" :value="old('telefone')"/>
                 </div>
 
                 <div>
@@ -319,13 +216,7 @@
                         :value="__('E-mail da empresa')"
                     />
 
-                    <x-text-input
-                        id="email_empresa"
-                        class="block mt-1 w-full"
-                        type="email"
-                        name="email_empresa"
-                        :value="old('email_empresa')"
-                    />
+                    <x-text-input id="email_empresa" class="block mt-1 w-full" type="email" name="email_empresa" :value="old('email_empresa')"/>
                 </div>
 
             </div>
@@ -354,4 +245,3 @@
     </form>
 
 </x-guest-layout>
-```

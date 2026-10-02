@@ -57,7 +57,7 @@
 
         <!-- Rodapé simples -->
         <footer class="mt-8 pt-4 border-t border-gray-100 dark:border-[#262624] text-xs text-gray-400 dark:text-gray-600">
-            Qualidade & Governança Corporativa &copy; {{ date('Y') }}
+            Flex SGI &copy; {{ date('Y') }}
         </footer>
     </main>
 

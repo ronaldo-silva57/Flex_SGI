@@ -35,7 +35,7 @@ return new class extends Migration {
             $table->text('observacoes')->nullable();
             $table->enum('status', ['Ativo','Inativo'])->default('Ativo');
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index(['empresa_id','status']);

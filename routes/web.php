@@ -57,6 +57,11 @@ use App\Http\Controllers\IshikawaCausaController;
 use App\Http\Controllers\RelatorioNaoConformidadeController;
 use App\Http\Controllers\GestaoResiduoController;
 
+use App\Http\Controllers\PesquisaSatisfacaoController;
+use App\Http\Controllers\PesquisaSatisfacaoRespostaController;
+use App\Http\Controllers\EquipamentoMedicaoController;
+use App\Http\Controllers\CalibracaoController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -172,6 +177,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('avaliacoes_fornecedores', AvaliacaoFornecedorController::class);
     Route::resource('analises_risco_ti', AnaliseRiscoTiController::class);
     Route::resource('cipa_reunioes', CipaReuniaoController::class);
+
+    //Pesquisas
+    Route::resource('pesquisas_satisfacao', PesquisaSatisfacaoController::class)
+        ->parameters(['pesquisas_satisfacao' => 'pesquisaSatisfacao',]);
+    Route::post('pesquisas_satisfacao/{pesquisaSatisfacao}/respostas',
+        [PesquisaSatisfacaoController::class, 'storeResposta']
+    )->name('pesquisas_satisfacao.respostas.store');
+    
+    //Rota de exportação para CSV
+    Route::get('respostas_pesquisa/export', [PesquisaSatisfacaoRespostaController::class, 'export'])
+        ->name('respostas_pesquisa.export');
+
+    Route::resource('pesquisas_satisfacao_respostas', PesquisaSatisfacaoRespostaController::class)
+        ->except(['show']);
+
+    // Equipamentos de Medição
+    Route::resource('equipamentos_medicao', EquipamentoMedicaoController::class);
+
+    Route::resource('calibracoes', CalibracaoController::class)
+        ->parameters(['calibracoes' => 'calibracao']);;
 
     // Histórico de Alterações (somente leitura)
     Route::resource('historico_alteracoes', HistoricoAlteracaoController::class)

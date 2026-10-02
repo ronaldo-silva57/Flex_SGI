@@ -16,7 +16,6 @@
                     <!--<div class="grid grid-cols-4 gap-4">-->
                         @php
                             $cadastrosModulos = [
-
                                 ['nome' => 'Aspectos Ambientais', 'icone' => 'fa-leaf', 'cor' => 'bg-green-600', 'rota' => route('aspectos_ambientais.index')],
                                 ['nome' => 'Registros Legais', 'icone' => 'fa-gavel', 'cor' => 'bg-stone-700', 'rota' => route('registros_legais.index')],
                                 ['nome' => 'Licenças Ambientais', 'icone' => 'fa-scroll', 'cor' => 'bg-teal-600', 'rota' => route('licencas_ambientais.index')],

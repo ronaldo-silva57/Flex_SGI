@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdatePesquisaRespostaRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+return [
+            'pesquisa_id'          => ['sometimes', 'exists:pesquisas_satisfacao,id'],
+            'cliente_id'           => ['nullable', 'exists:clientes,id'],
+            'respondente_id'       => ['nullable', 'exists:users,id'],
+            'nota'                 => ['sometimes', 'numeric', 'min:0', 'max:10'],
+            'comentario'           => ['nullable', 'string'],
+            'respostas_detalhadas' => ['nullable', 'array'],
+            'respondido_em'        => ['nullable', 'date'],
+        ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('comentario')) {
+            $detalhes = $this->input('respostas_detalhadas', []);
+            $detalhes['comentario'] = $this->input('comentario');
+            $this->merge(['respostas_detalhadas' => $detalhes]);
+        }
+    }
+}

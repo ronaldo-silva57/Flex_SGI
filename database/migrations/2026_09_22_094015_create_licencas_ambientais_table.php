@@ -29,7 +29,7 @@ return new class extends Migration
                   ->default('Vigente');
             $table->text('observacoes')->nullable();
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index(['empresa_id','status']);

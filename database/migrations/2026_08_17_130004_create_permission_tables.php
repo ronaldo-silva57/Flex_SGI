@@ -27,7 +27,8 @@ return new class extends Migration
             $table->id(); // permission id
             $table->string('name');
             $table->string('guard_name');
-            $table->timestamps();
+            $table->timestampstz();
+            $table->softDeletes();
 
             $table->unique(['name', 'guard_name']);
         });

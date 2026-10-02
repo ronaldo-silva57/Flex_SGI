@@ -33,7 +33,7 @@ return new class extends Migration {
             $table->enum('status', ['Planejado','Em andamento','Concluído','Cancelado','Atrasado'])
                   ->default('Planejado');
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index(['empresa_id','status']);

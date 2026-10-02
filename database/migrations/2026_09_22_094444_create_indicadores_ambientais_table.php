@@ -50,7 +50,7 @@ return new class extends Migration {
             $table->text('acao_necessaria')->nullable();
             $table->enum('status', ['No prazo','Atrasado','Concluído'])->default('No prazo');
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->index('indicador_ambiental_id');

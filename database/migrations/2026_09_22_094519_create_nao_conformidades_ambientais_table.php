@@ -48,7 +48,7 @@ return new class extends Migration {
             $table->text('justificativa_encerramento')->nullable();
             $table->text('acao_corretiva')->nullable();
 
-            $table->timestamps();
+            $table->timestampsTz();
             $table->softDeletes();
 
             $table->unique(['empresa_id','codigo']);
