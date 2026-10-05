@@ -10,7 +10,7 @@
                     <i class="fas fa-arrow-left mr-2"></i>Voltar
                 </a>
                 <a href="{{ route('produtos_quimicos.edit', $produtoQuimico) }}"
-                   class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+                class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
                     <i class="fas fa-edit mr-2"></i>Editar
                 </a>
             </div>

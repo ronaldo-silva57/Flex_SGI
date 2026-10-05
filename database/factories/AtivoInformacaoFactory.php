@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AtivoInformacaoFactory extends Factory
 {
+
+    protected $model = AtivoInformacao::class;
+
     /**
      * Define the model's default state.
      *

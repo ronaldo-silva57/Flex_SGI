@@ -13,6 +13,6 @@ class AuditoriaItemSeeder extends Seeder
      */
     public function run(): void
     {
-        AuditoriaItem::factory()->count(15)->create();
+        AuditoriaItem::factory()->count(20)->create();
     }
 }

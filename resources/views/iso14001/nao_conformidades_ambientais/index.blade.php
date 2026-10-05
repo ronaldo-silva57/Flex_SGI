@@ -122,12 +122,23 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-3">
-                                        <a href="{{ route('nao_conformidades_ambientais.show', $nc) }}" class="text-blue-600 hover:text-blue-900"><i class="fas fa-eye"></i></a>
-                                        <a href="{{ route('nao_conformidades_ambientais.edit', $nc) }}" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></a>
+                                        <a href="{{ route('nao_conformidades_ambientais.show', $nc) }}"                                            class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-900 transition"
+                                           title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                            <span class="hidden sm:inline">Visualizar</span>
+                                        </a>
+                                        <a href="{{ route('nao_conformidades_ambientais.edit', $nc) }}"                                            class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-900 transition"
+                                           title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                            <span class="hidden sm:inline">Editar</span>
+                                        </a>
                                         <form action="{{ route('nao_conformidades_ambientais.destroy', $nc) }}" method="POST"
                                               onsubmit="return confirm('Excluir esta não conformidade?');" class="inline">
                                             @csrf @method('DELETE')
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i                                     class="inline-flex items-center gap-1 text-red-600 hover:text-red-900 transition"
+                                                    title="Excluir">
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span class="hidden sm:inline">Excluir</span>
                                         </form>
                                     </div>
                                 </td>

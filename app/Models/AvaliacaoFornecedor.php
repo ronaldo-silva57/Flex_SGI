@@ -30,11 +30,11 @@ class AvaliacaoFornecedor extends Model
     ];
 
     protected $casts = [
-        'nota_qualidade' => 'decimal:2',
-        'nota_prazo' => 'decimal:2',
-        'nota_atendimento' => 'decimal:2',
-        'nota_esg_ambiental' => 'decimal:2',
-        'nota_final' => 'decimal:2',
+        'nota_qualidade'     => 'float',
+        'nota_prazo'         => 'float',
+        'nota_atendimento'   => 'float',
+        'nota_esg_ambiental' => 'float',
+        'nota_final'         => 'float',
     ];
 
     /**

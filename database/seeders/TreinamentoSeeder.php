@@ -14,7 +14,7 @@ class TreinamentoSeeder extends Seeder
      */
     public function run(): void
     {
-        Treinamento::factory(10)->create()->each(function ($treinamento) {
+        Treinamento::factory(20)->create()->each(function ($treinamento) {
             TreinamentoUsuario::factory(3)->create([
                 'treinamento_id' => $treinamento->id,
             ]);

@@ -167,17 +167,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::resource('gestao_residuos', GestaoResiduoController::class);
     Route::resource('objetivos_ambientais', ObjetivoAmbientalController::class);
-    Route::resource('produtos_quimicos', ProdutoQuimicoController::class);
+
+
+    Route::prefix('produtos_quimicos')->name('produtos_quimicos.')->group(function () {
+        Route::get('{produtoQuimico}/fispq/download', [ProdutoQuimicoController::class, 'downloadFispq'])
+            ->name('fispq.download');
+
+        // Rota que faltava para o upload:
+        Route::post('{produtoQuimico}/fispq/upload', [ProdutoQuimicoController::class, 'uploadFispq'])
+            ->name('fispq.upload');
+    });
+
+    Route::resource('produtos_quimicos', ProdutoQuimicoController::class)
+    ->parameters(['produtos_quimicos' => 'produtoQuimico']);
+
     Route::resource('nao_conformidades_ambientais', NaoConformidadeAmbientalController::class);
     Route::resource('indicadores_ambientais', IndicadorAmbientalController::class)
         ->parameters(['indicadores_ambientais' => 'indicadorAmbiental']);
 
     Route::resource('exames_medicos', ExameMedicoController::class);
-    Route::resource('mudancas_gestao', MudancaGestaoController::class);
-    Route::resource('avaliacoes_fornecedores', AvaliacaoFornecedorController::class);
+    Route::resource('mudancas_gestao', MudancaGestaoController::class)
+        ->parameters(['mudancas_gestao' => 'mudancaGestao']);
+    Route::resource('avaliacoes_fornecedores', AvaliacaoFornecedorController::class)
+        ->parameters(['avaliacoes_fornecedores' => 'avaliacaoFornecedor']);
+
+
     Route::resource('analises_risco_ti', AnaliseRiscoTiController::class);
     Route::resource('cipa_reunioes', CipaReuniaoController::class);
-
+        
     //Pesquisas
     Route::resource('pesquisas_satisfacao', PesquisaSatisfacaoController::class)
         ->parameters(['pesquisas_satisfacao' => 'pesquisaSatisfacao',]);

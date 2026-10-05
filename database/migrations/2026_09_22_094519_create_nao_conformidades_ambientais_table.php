@@ -15,9 +15,12 @@ return new class extends Migration {
             $table->foreignId('empresa_id')->constrained('empresas')->restrictOnDelete();
             $table->foreignId('licenca_ambiental_id')->nullable()
                   ->constrained('licencas_ambientais')->nullOnDelete();
+
             $table->foreignId('aspecto_ambiental_id')->nullable()
                   ->constrained('aspectos_ambientais')->nullOnDelete();
+
             $table->foreignId('processo_id')->nullable()->constrained('processos')->nullOnDelete();
+            
             $table->foreignId('responsavel_apuracao_id')->nullable()
                   ->constrained('users')->nullOnDelete();
             $table->foreignId('responsavel_tratamento_id')->nullable()

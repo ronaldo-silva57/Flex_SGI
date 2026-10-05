@@ -76,7 +76,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="px-6 py-4 border-t">{{ $analises->links() }}</div>
+            <div class="px-6 py-4 border-t">
+                {{ $analises->links() }}
+            </div>
         </div>
     </div>
 </x-app-layout>

@@ -111,9 +111,16 @@ class ProdutoQuimicoController extends Controller
 
     public function downloadFispq(ProdutoQuimico $produtoQuimico)
     {
-        if (!$produtoQuimico->arquivo_fispq_path || !Storage::disk('public')->exists($produtoQuimico->arquivo_fispq_path)) {
-            return back()->with('error','Arquivo de FISPQ não encontrado.');
+        // Altere de 'local' para 'public' para coincidir com o upload
+        $disco = 'public';
+
+        if (! $produtoQuimico->arquivo_fispq_path
+            || ! Storage::disk($disco)->exists($produtoQuimico->arquivo_fispq_path)) {
+            abort(404, 'Arquivo FISPQ não encontrado.');
         }
-        return Storage::disk('public')->download($produtoQuimico->arquivo_fispq_path);
+
+        $nome = 'FISPQ-' . $produtoQuimico->nome . '.pdf';
+
+        return Storage::disk($disco)->download($produtoQuimico->arquivo_fispq_path, $nome);
     }
 }

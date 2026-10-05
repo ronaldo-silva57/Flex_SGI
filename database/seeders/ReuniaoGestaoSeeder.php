@@ -13,6 +13,6 @@ class ReuniaoGestaoSeeder extends Seeder
      */
     public function run(): void
     {
-        ReuniaoGestao::factory()->count(10)->create();
+        ReuniaoGestao::factory()->count(20)->create();
     }
 }

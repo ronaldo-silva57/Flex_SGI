@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AcaoCorretivaFactory extends Factory
 {
+
+    protected $model = AcaoCorretiva::class;
+
     /**
      * Define the model's default state.
      *

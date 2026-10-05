@@ -16,16 +16,16 @@ class EmpresaSeeder extends Seeder
         //Cria uma empresa com dados fixos
         Empresa::factory()->create([
             'codigo'       => 'EMP-001',
-            'razao_social' => 'Minha Empresa Ltda',
-            'nome_fantasia'=> 'Flex SGI',
-            'cnpj'         => '12.345.678/0001-99',
+            'razao_social' => 'Apex Tecnologia e Sistemas Eletrônicos S.A.',
+            'nome_fantasia'=> 'Apex Tech',
+            'cnpj'         => '12.345.678/0001-90',
             'ie'           => '123456789',
-            'endereco'     => 'Rua Exemplo, 123',
-            'cidade'       => 'São Paulo',
+            'endereco'     => 'Av. das Indústrias, 1500, Distrito Industrial',
+            'cidade'       => 'Campinas',
             'estado'       => 'SP',
-            'cep'          => '01000-000',
-            'telefone'     => '(11) 99999-9999',
-            'email'        => 'contato@flexsgi.com.br',
+            'cep'          => '13050-000',
+            'telefone'     => '(19) 3789-1000',
+            'email'        => 'contato@apextech.com.br',
             'ativo'        => true,
         ]);
     }

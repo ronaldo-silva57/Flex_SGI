@@ -42,4 +42,10 @@ class UpdateMudancaGestaoRequest extends FormRequest
             'parecer_aprovacao'             => ['nullable', 'string'],
         ];
     }
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'empresa_id' => \App\Models\Empresa::value('id'),
+        ]);
+    }
 }

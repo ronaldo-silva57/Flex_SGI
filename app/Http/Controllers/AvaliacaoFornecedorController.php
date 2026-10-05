@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\AvaliacaoFornecedor;
+use App\Models\Empresa;
+use App\Models\Fornecedor;
+use App\Models\User;
 use App\Http\Requests\StoreAvaliacaoFornecedorRequest;
 use App\Http\Requests\UpdateAvaliacaoFornecedorRequest;
 use Illuminate\Http\RedirectResponse;
@@ -13,13 +16,13 @@ class AvaliacaoFornecedorController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index(): View
+    public function index(): View
     {
         $avaliacoes = AvaliacaoFornecedor::with(['empresa', 'fornecedor', 'avaliador'])
             ->latest()
             ->paginate(15);
 
-        return view('avaliacoes_fornecedores.index', compact('avaliacoes'));
+        return view('cadastros.avaliacoes_fornecedores.index', compact('avaliacoes'));
     }
 
     /**
@@ -27,7 +30,11 @@ public function index(): View
      */
     public function create(): View
     {
-        return view('avaliacoes_fornecedores.create');
+        return view('cadastros.avaliacoes_fornecedores.create', [
+            'empresa'      => Empresa::orderBy('razao_social')->first(),
+            'fornecedores' => Fornecedor::orderBy('razao_social')->get(),
+            'avaliadores'  => User::orderBy('name')->get(),
+        ]);
     }
 
     /**
@@ -36,47 +43,46 @@ public function index(): View
     public function store(StoreAvaliacaoFornecedorRequest $request): RedirectResponse
     {
         $data = $request->validated();
-
-        // Cálculo da média ponderada automática se nota_final não for digitada manualmente
-        if (empty($data['nota_final'])) {
-            $notas = array_filter([
-                $data['nota_qualidade'] ?? null,
-                $data['nota_prazo'] ?? null,
-                $data['nota_atendimento'] ?? null,
-                $data['nota_esg_ambiental'] ?? null,
-            ], fn($n) => !is_null($n));
-
-            $data['nota_final'] = count($notas) > 0 ? array_sum($notas) / count($notas) : 0;
-        }
+        $data['nota_final'] = $this->calcularNotaFinal($data);
 
         AvaliacaoFornecedor::create($data);
 
         return redirect()->route('avaliacoes_fornecedores.index')
-            ->with('success', 'Avaliação de fornecedor concluída com sucesso!');
+            ->with('success', 'Avaliação de fornecedor registrada com sucesso!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(AvaliacaoFornecedor $avaliacaoFornecedor): View
     {
-        //
+        $avaliacaoFornecedor->load(['empresa', 'fornecedor', 'avaliador']);
+
+        return view('cadastros.avaliacoes_fornecedores.show', compact('avaliacaoFornecedor'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AvaliacaoFornecedor $avaliacoesFornecedor): View
+    public function edit(AvaliacaoFornecedor $avaliacaoFornecedor): View
     {
-        return view('avaliacoes_fornecedores.edit', compact('avaliacoesFornecedor'));
+        return view('cadastros.avaliacoes_fornecedores.edit', [
+            'avaliacaoFornecedor' => $avaliacaoFornecedor,
+            'empresas'            => Empresa::orderBy('razao_social')->get(),
+            'fornecedores'        => Fornecedor::orderBy('razao_social')->get(),
+            'avaliadores'         => User::orderBy('name')->get(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAvaliacaoFornecedorRequest $request, AvaliacaoFornecedor $avaliacoesFornecedor): RedirectResponse
+    public function update(UpdateAvaliacaoFornecedorRequest $request, AvaliacaoFornecedor $avaliacaoFornecedor): RedirectResponse
     {
-        $avaliacoesFornecedor->update($request->validated());
+        $data = $request->validated();
+        $data['nota_final'] = $this->calcularNotaFinal($data, $avaliacaoFornecedor);
+
+        $avaliacaoFornecedor->update($data);
 
         return redirect()->route('avaliacoes_fornecedores.index')
             ->with('success', 'Avaliação atualizada com sucesso!');
@@ -85,11 +91,30 @@ public function index(): View
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AvaliacaoFornecedor $avaliacoesFornecedor): RedirectResponse
+    public function destroy(AvaliacaoFornecedor $avaliacaoFornecedor): RedirectResponse
     {
-        $avaliacoesFornecedor->delete();
+        $avaliacaoFornecedor->delete();
 
         return redirect()->route('avaliacoes_fornecedores.index')
             ->with('success', 'Avaliação excluída!');
+    }
+
+    /**
+     * Calcula a média das notas preenchidas caso nota_final não venha no request.
+     */
+    private function calcularNotaFinal(array $data, ?AvaliacaoFornecedor $atual = null): ?float
+    {
+        if (!empty($data['nota_final'])) {
+            return $data['nota_final'];
+        }
+
+        $notas = array_filter([
+            $data['nota_qualidade']     ?? $atual?->nota_qualidade,
+            $data['nota_prazo']         ?? $atual?->nota_prazo,
+            $data['nota_atendimento']   ?? $atual?->nota_atendimento,
+            $data['nota_esg_ambiental'] ?? $atual?->nota_esg_ambiental,
+        ], fn ($n) => !is_null($n) && $n !== '');
+
+        return count($notas) > 0 ? round(array_sum($notas) / count($notas), 2) : null;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\EpiUsuario;
 
@@ -13,6 +12,6 @@ class EpiUsuarioSeeder extends Seeder
      */
     public function run(): void
     {
-        EpiUsuario::factory(30)->create();
+        EpiUsuario::factory(25)->create();
     }
 }

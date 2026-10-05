@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cliente;
+use App\Models\NaoConformidadeAmbiental;
 use App\Models\Processo;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -20,8 +22,10 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             EmpresaSeeder::class,
             DepartamentoSeeder::class,
+            ClienteSeeder::class,
             FornecedorSeeder::class,
             ClausulaSeeder::class,
+            LicencaAmbientalSeeder::class, 
             AdminUserSeeder::class,
         ]);
 
@@ -48,16 +52,36 @@ class DatabaseSeeder extends Seeder
             AspectoAmbientalSeeder::class,
             EpiSeeder::class,
             EpiUsuarioSeeder::class,
-            PerigoRiscoSeeder::class,
+            PerigoRiscoSeeder::class, 
             IncidenteAcidenteSeeder::class,
             AtivosInformacaoSeeder::class,     
-            ControlesSegurancaSeeder::class,  
-            IncidenteSegurancaSeeder::class,  
+            ControlesSegurancaSeeder::class, 
+            IncidenteSegurancaSeeder::class, 
             EsgIndicadorSeeder::class,
             EsgMonitoramentoSeeder::class,
             StakeholderSeeder::class,
             MaterialidadeSeeder::class,
             VinculoNormativoSeeder::class,
+            MudancaGestaoSeeder::class,
+            NaoConformidadeAmbientalSeeder::class,
+
+            PlanoAcaoSeeder::class,
+            AvaliacaoFornecedorSeeder::class,
+
+            PesquisaSatisfacaoSeeder::class,
+            PesquisaSatisfacaoRespostaSeeder::class, 
+
+            EquipamentoMedicaoSeeder::class,
+            CalibracaoSeeder::class, 
+            
+            GestaoResiduoSeeder::class,                
+            ObjetivoAmbientalSeeder::class, 
+            
+            ProdutoQuimicoSeeder::class,            
+            IndicadorAmbientalSeeder::class,
+            MonitoramentoAmbientalSeeder::class,
+
+            ExameMedicoSeeder::class,
         ]);
     }
 }

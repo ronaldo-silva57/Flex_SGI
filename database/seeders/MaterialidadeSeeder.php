@@ -14,6 +14,6 @@ class MaterialidadeSeeder extends Seeder
      */
     public function run(): void
     {
-            Materialidade::factory()->count(15)->create();
+            Materialidade::factory()->count(25)->create();
     }
 }

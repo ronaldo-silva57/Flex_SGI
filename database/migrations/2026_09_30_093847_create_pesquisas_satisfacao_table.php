@@ -38,7 +38,6 @@ return new class extends Migration
             $table->timestampsTz();
             $table->softDeletes();
 
-            $table->unique('empresa_id', 'codigo');
             $table->index('empresa_id', 'status');
             $table->index('data_inicio');
         });

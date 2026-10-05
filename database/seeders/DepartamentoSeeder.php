@@ -15,7 +15,7 @@ class DepartamentoSeeder extends Seeder
     public function run(): void
     {
         Empresa::all()->each(function ($empresa) {
-            Departamento::factory(3)->create([
+            Departamento::factory(20)->create([
                 'empresa_id' => $empresa->id,
             ]);
         });

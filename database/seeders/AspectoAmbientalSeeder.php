@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\AspectoAmbiental;
 
@@ -13,6 +12,6 @@ class AspectoAmbientalSeeder extends Seeder
      */
     public function run(): void
     {
-        AspectoAmbiental::factory(30)->create();
+        AspectoAmbiental::factory(25)->create();
     }
 }

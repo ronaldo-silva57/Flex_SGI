@@ -102,12 +102,23 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-3">
-                                        <a href="{{ route('produtos_quimicos.show', $p) }}" class="text-blue-600 hover:text-blue-900"><i class="fas fa-eye"></i></a>Visualizar
-                                        <a href="{{ route('produtos_quimicos.edit', $p) }}" class="text-indigo-600 hover:text-indigo-900"><i class="fas fa-edit"></i></a>Editar
+                                        <a href="{{ route('produtos_quimicos.show', $p) }}"                                            class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-900 transition"
+                                           title="Visualizar">
+                                            <i class="fas fa-eye"></i>
+                                            <span class="hidden sm:inline">Visualizar</span>
+                                        </a>
+                                        <a href="{{ route('produtos_quimicos.edit', $p) }}"                                            class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-900 transition"
+                                           title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                            <span class="hidden sm:inline">Editar</span>
+                                        </a>
                                         <form action="{{ route('produtos_quimicos.destroy', $p) }}" method="POST"
                                               onsubmit="return confirm('Excluir este produto?');" class="inline">
                                             @csrf @method('DELETE')
-                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button> Excluir
+                                            <button                                                     class="inline-flex items-center gap-1 text-red-600 hover:text-red-900 transition"
+                                                    title="Excluir">
+                                                <i class="fas fa-trash-alt"></i>
+                                                <span class="hidden sm:inline">Excluir</span>
                                         </form>
                                     </div>
                                 </td>

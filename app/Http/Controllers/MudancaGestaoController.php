@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\MudancaGestao;
+use App\Models\Empresa;
+use App\Models\Processo;
+use App\Models\User;
 use App\Http\Requests\StoreMudancaGestaoRequest;
 use App\Http\Requests\UpdateMudancaGestaoRequest;
 use Illuminate\Http\RedirectResponse;
@@ -10,69 +13,71 @@ use Illuminate\View\View;
 
 class MudancaGestaoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): View
     {
-        $mudancas = MudancaGestao::with(['empresa', 'solicitante', 'processo'])
+        $mudancas = MudancaGestao::with(['empresa', 'solicitante', 'responsavelAprovacao', 'processo'])
             ->latest()
             ->paginate(15);
 
-        return view('mudancas_gestao.index', compact('mudancas'));
+        return view('cadastros.mudancas_gestao.index', compact('mudancas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
-        return view('mudancas_gestao.create');
+        return view('cadastros.mudancas_gestao.create', $this->dadosFormulario());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreMudancaGestaoRequest $request): RedirectResponse
     {
         MudancaGestao::create($request->validated());
 
-        return redirect()->route('v.index')
+        return redirect()->route('mudancas_gestao.index')
             ->with('success', 'Solicitação de Mudança criada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(MudancaGestao $mudancaGestao): View
     {
-        //
+        $mudancaGestao->load([
+            'empresa', 'solicitante', 'responsavelAprovacao', 'processo',
+        ]);
+
+        return view('cadastros.mudancas_gestao.show', compact('mudancaGestao'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(MudancaGestao $mudancasGestao): View
+    public function edit(MudancaGestao $mudancaGestao): View
     {
-        return view('mudancas_gestao.edit', compact('mudancasGestao'));
+        return view('cadastros.mudancas_gestao.edit', array_merge(
+            ['mudancaGestao' => $mudancaGestao],
+            $this->dadosFormulario()
+        ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateMudancaGestaoRequest $request, MudancaGestao $mudancasGestao): RedirectResponse
+    public function update(UpdateMudancaGestaoRequest $request, MudancaGestao $mudancaGestao): RedirectResponse
     {
-        $mudancasGestao->update($request->validated());
+        $mudancaGestao->update($request->validated());
 
         return redirect()->route('mudancas_gestao.index')
             ->with('success', 'Gestão de Mudança atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(MudancaGestao $mudancaGestao): RedirectResponse
     {
-        //
+        $mudancaGestao->delete();
+
+        return redirect()->route('mudancas_gestao.index')
+            ->with('success', 'Gestão de Mudança excluída!');
+    }
+
+    /**
+     * Dados comuns às telas de create/edit.
+     */
+    private function dadosFormulario(): array
+    {
+        return [
+            'empresaAtual'  => Empresa::first(),      // única empresa
+            'solicitantes'  => User::orderBy('name')->get(),
+            'aprovadores'   => User::orderBy('name')->get(),
+            'processos'     => Processo::orderBy('nome')->get(), // ajuste o campo se não for 'nome'
+        ];
     }
 }
