@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\PesquisaSatisfacao;
 use Illuminate\Database\Seeder;
+use App\Models\PesquisaSatisfacao;
 
 class PesquisaSatisfacaoSeeder extends Seeder
 {
@@ -12,6 +12,6 @@ class PesquisaSatisfacaoSeeder extends Seeder
      */
     public function run(): void
     {
-        PesquisaSatisfacao::factory()->count(25)->create();
+        PesquisaSatisfacao::factory()->count(15)->create();
     }
 }

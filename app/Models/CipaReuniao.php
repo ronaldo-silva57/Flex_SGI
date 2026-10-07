@@ -16,8 +16,8 @@ use HasFactory, SoftDeletes, Auditavel;
 
     protected $fillable = [
         'empresa_id',
-        'presidida_por_id',
-        'secretariada_por_id',
+        'presidente_id',
+        'secretario_id',
         'gestao_ano',
         'tipo',
         'data_reuniao',
@@ -37,16 +37,16 @@ use HasFactory, SoftDeletes, Auditavel;
      */
     public function empresa(): BelongsTo
     {
-        return $this->belongsTo(Empresa::class);
+        return $this->belongsTo(Empresa::class, 'empresa_id');
     }
 
     public function presidente(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'presidida_por_id');
+        return $this->belongsTo(User::class, 'presidente_id');
     }
 
     public function secretario(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'secretariada_por_id');
+        return $this->belongsTo(User::class, 'secretario_id');
     }
 }

@@ -18,18 +18,22 @@ class EquipamentoMedicaoController extends Controller
     public function index(Request $request)
     {
         $equipamentos = EquipamentoMedicao::query()
-            ->daEmpresa()
             ->with('responsavel:id,name')
             ->when($request->busca, fn ($q) => $q->where(function ($q) use ($request) {
                 $q->where('nome', 'ilike', "%{$request->busca}%")
-                  ->orWhere('codigo', 'ilike', "%{$request->busca}%")
-                  ->orWhere('numero_serie', 'ilike', "%{$request->busca}%");
+                ->orWhere('codigo', 'ilike', "%{$request->busca}%")
+                ->orWhere('numero_serie', 'ilike', "%{$request->busca}%");
             }))
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
-            ->when($request->filtro === 'vencidos', fn ($q) => $q->whereDate('proxima_calibracao', '<', now()))
-            ->when($request->filtro === '30d', fn ($q) => $q->whereBetween('proxima_calibracao', [now(), now()->addDays(30)]))
+            ->when($request->filtro === 'vencidos', fn ($q) =>
+                $q->whereDate('proxima_calibracao', '<', now())
+            )
+            ->when($request->filtro === '30d', fn ($q) =>
+                $q->whereBetween('proxima_calibracao', [now(), now()->addDays(30)])
+            )
             ->orderByRaw('proxima_calibracao IS NULL, proxima_calibracao ASC')
-            ->paginate(15)->withQueryString();
+            ->paginate(15)
+            ->withQueryString();
 
         return view('iso9001.equipamentos_medicao.index', compact('equipamentos'));
     }

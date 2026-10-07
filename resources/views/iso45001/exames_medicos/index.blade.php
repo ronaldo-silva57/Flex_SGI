@@ -140,29 +140,27 @@
                                         {{ $exame->status }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                    <div class="flex justify-end items-center gap-3">
-                                        @if($exame->arquivo_aso_path)
-                                            <a href="{{ Storage::url($exame->arquivo_aso_path) }}" target="_blank"
-                                               class="inline-flex items-center gap-1 text-gray-600 hover:text-gray-900 transition" title="Baixar PDF">
-                                                <i class="fas fa-file-pdf text-red-500"></i>
-                                            </a>
-                                        @endif
-                                        <a href="{{ route('exames_medicos.edit', $exame) }}"
-                                           class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-900 transition"
-                                           title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                            <span class="hidden sm:inline">Editar</span>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="inline-flex gap-1">
+                                        <a href="{{ route('exames_medicos.show', $exame) }}"
+                                        class="inline-flex items-center px-3 py-2 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                                        title="Visualizar">
+                                        <i class="fas fa-eye mr-1"></i> Visualizar
                                         </a>
-                                        <form action="{{ route('exames_medicos.destroy', $exame) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Tem certeza que deseja excluir este exame médico?');">
+
+                                        <a href="{{ route('exames_medicos.edit', $exame) }}"
+                                        class="inline-flex items-center px-3 py-2 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
+                                        <i class="fas fa-edit mr-1"></i> Editar
+                                        </a>
+
+                                        <form action="{{ route('exames_medicos.destroy', $exame) }}" method="POST"
+                                            onsubmit="return confirm('Tem certeza que deseja excluir este exame médico?');">
                                             @csrf @method('DELETE')
                                             <button type="submit"
-                                                    class="inline-flex items-center gap-1 text-red-600 hover:text-red-900 transition"
-                                                    title="Excluir">
-                                                <i class="fas fa-trash-alt"></i>
-                                                <span class="hidden sm:inline">Excluir</span>
+                                                class="inline-flex items-center px-3 py-2 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                                title="Excluir">
+                                                <i class="fas fa-trash mr-1"></i> Excluir
                                             </button>
                                         </form>
                                     </div>

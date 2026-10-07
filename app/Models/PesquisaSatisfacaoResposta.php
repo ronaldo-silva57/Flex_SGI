@@ -35,6 +35,7 @@ class PesquisaSatisfacaoResposta extends Model
      * Relacionamentos
      */
 
+
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class);

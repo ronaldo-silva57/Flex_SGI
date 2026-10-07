@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,26 +23,35 @@ class UpdatePlanoAcaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'            => ['sometimes', 'exists:empresas,id'],
-            'responsavel_id'        => ['nullable', 'integer', 'exists:users,id',],
-            'origem_type'           => ['nullable', 'string', Rule::in(['rnc','risco','auditoria','reuniao',]),],
-            'origem_id'             => ['nullable', 'integer', 'required_with:origem_type',],
-            'codigo'                => ['nullable', 'string', 'max:50',],
-            'titulo'                => ['sometimes', 'string', 'max:255',],
-            'o_que'                 => ['sometimes', 'string',],
-            'por_que'               => ['nullable', 'string',],
-            'onde'                  => ['nullable', 'string',],
-            'como'                  => ['nullable', 'string',],
-            'quanto_custa'          => ['nullable', 'numeric', 'min:0',],
-            'prazo_inicio'          => ['nullable', 'date',],
-            'prazo_fim'             => ['nullable', 'date',],
-            'data_conclusao'        => ['nullable', 'date',],
-            'progresso'             => ['nullable', 'integer', 'between:0,100',],
-            'status'                => [ 'nullable', Rule::in(['Pendente','Em andamento','Em verificação','Concluído','Cancelado',]),],
-            'eficaz'                => ['nullable', 'boolean',],
-            'evidencia_conclusao'   => ['nullable', 'string',],
-            'observacoes'           => ['nullable', 'string',],
+            'empresa_id'            => ['sometimes', 'nullable', 'exists:empresas,id'],
+            'responsavel_id'        => ['nullable', 'integer', 'exists:users,id'],
+            'origem_type'           => ['nullable', 'string'],
+            'origem_id'             => ['nullable', 'integer', 'required_with:origem_type'],
+            'codigo'                => ['nullable', 'string', 'max:50'],
+            'titulo'                => ['sometimes', 'required', 'string', 'max:255'],
+            'o_que'                 => ['sometimes', 'required', 'string'],
+            'por_que'               => ['nullable', 'string'],
+            'onde'                  => ['nullable', 'string'],
+            'como'                  => ['nullable', 'string'],
+            'quanto_custa'          => ['nullable', 'numeric', 'min:0'],
+            'prazo_inicio'          => ['nullable', 'date'],
+            'prazo_fim'             => ['nullable', 'date'],
+            'data_conclusao'        => ['nullable', 'date'],
+            'progresso'             => ['nullable', 'integer', 'between:0,100'],
+            'status'                => ['nullable', Rule::in(['Pendente', 'Em andamento', 'Em verificação', 'Concluído', 'Cancelado'])],
+            'eficaz'                => ['nullable', 'boolean'],
+            'evidencia_conclusao'   => ['nullable', 'string'],
+            'observacoes'           => ['nullable', 'string'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('quanto_custa') && is_string($this->quanto_custa)) {
+            $quantoCusta = str_replace(['.', ','], ['', '.'], $this->quanto_custa);
+            $this->merge([
+                'quanto_custa' => is_numeric($quantoCusta) ? (float) $quantoCusta : 0,
+            ]);
+        }
+    }
 }
-
-

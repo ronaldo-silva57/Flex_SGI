@@ -93,13 +93,17 @@
                                 <td class="px-6 py-4 text-sm text-gray-600">{{ $r->respondido_em?->format('d/m/Y H:i') }}</td>
                                 <td class="px-6 py-4 text-right text-sm">
                                     <div class="flex justify-end items-center gap-2">
-                                        <a href="{{ route('pesquisas_satisfacao_respostas.edit', $r) }}" class="text-indigo-600 hover:text-indigo-900">
-                                            <i class="fas fa-edit"></i>
+                                        <a href="{{ route('pesquisas_satisfacao_respostas.edit', $r) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
+                                            <i class="fas fa-edit"></i>Editar
                                         </a>
                                         <form action="{{ route('pesquisas_satisfacao_respostas.destroy', $r) }}" method="POST" onsubmit="return confirm('Excluir esta resposta?');">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900">
-                                                <i class="fas fa-trash-alt"></i>
+                                            <button type="submit"
+                                                class="inline-flex items-center px-2 py-1 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                                title="Excluir">
+                                                <i class="fas fa-trash"></i>Excluir
                                             </button>
                                         </form>
                                     </div>

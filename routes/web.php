@@ -51,11 +51,13 @@ use App\Http\Controllers\AvaliacaoFornecedorController;
 use App\Http\Controllers\AnaliseRiscoTiController;
 use App\Http\Controllers\CipaReuniaoController;
 
+
 use App\Http\Controllers\AnaliseCausaRespostaController;
 use App\Http\Controllers\AnaliseIshikawaController;
 use App\Http\Controllers\IshikawaCausaController;
 use App\Http\Controllers\RelatorioNaoConformidadeController;
 use App\Http\Controllers\GestaoResiduoController;
+
 
 use App\Http\Controllers\PesquisaSatisfacaoController;
 use App\Http\Controllers\PesquisaSatisfacaoRespostaController;
@@ -158,7 +160,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('stakeholders', StakeholderController::class);
     Route::resource('materialidade', MaterialidadeController::class);
     Route::resource('vinculos_normativos', VinculoNormativoController::class);
-    Route::resource('planos_acao', PlanoAcaoController::class);
+    Route::resource('planos_acao', PlanoAcaoController::class)
+    ->parameters(['planos_acao' => 'planoAcao']);
 
     Route::resource('licencas_ambientais', LicencaAmbientalController::class)
         ->parameters(['licencas_ambientais' => 'licenca']);
@@ -193,7 +196,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::resource('analises_risco_ti', AnaliseRiscoTiController::class);
-    Route::resource('cipa_reunioes', CipaReuniaoController::class);
+    Route::resource('cipa_reunioes', CipaReuniaoController::class)
+        ->parameters(['cipa_reunioes' => 'cipaReuniao']);
         
     //Pesquisas
     Route::resource('pesquisas_satisfacao', PesquisaSatisfacaoController::class)

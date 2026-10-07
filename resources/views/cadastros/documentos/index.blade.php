@@ -65,9 +65,6 @@
                                 <i class="fas fa-file mr-1"></i>Título
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <i class="fas fa-building mr-1"></i>Empresa
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <i class="fas fa-tag mr-1"></i>Tipo
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -92,9 +89,6 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                     {{ $documento->titulo }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                    {{ $documento->empresa->razao_social ?? 'N/A' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -131,28 +125,25 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                                    <div class="flex justify-end items-center gap-3">
+                                    <div class="inline-flex gap-1">
                                         <a href="{{ route('documentos.show', $documento) }}"
-                                           class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-900 transition"
-                                           title="Visualizar">
-                                            <i class="fas fa-eye"></i>
-                                            <span class="hidden sm:inline">Visualizar</span>
+                                        class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                                        title="Visualizar">
+                                            <i class="fas fa-eye"></i>Visualizar
                                         </a>
                                         <a href="{{ route('documentos.edit', $documento) }}"
-                                           class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-900 transition"
-                                           title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                            <span class="hidden sm:inline">Editar</span>
+                                        class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
+                                            <i class="fas fa-edit"></i>Editar
                                         </a>
                                         <form action="{{ route('documentos.destroy', $documento) }}"
                                               method="POST"
                                               onsubmit="return confirm('Tem certeza que deseja excluir este documento?');">
                                             @csrf @method('DELETE')
                                             <button type="submit"
-                                                    class="inline-flex items-center gap-1 text-red-600 hover:text-red-900 transition"
-                                                    title="Excluir">
-                                                <i class="fas fa-trash-alt"></i>
-                                                <span class="hidden sm:inline">Excluir</span>
+                                                class="inline-flex items-center px-2 py-1 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                                title="Excluir">
+                                                <i class="fas fa-trash"></i>Excluir
                                             </button>
                                         </form>
                                     </div>

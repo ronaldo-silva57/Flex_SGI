@@ -22,7 +22,7 @@
                             ['nome' => 'Clientes', 'icone' => 'fa-tasks', 'cor' => 'bg-violet-500', 'rota' => route('clientes.index')],
                             ['nome' => 'Documentos', 'icone' => 'fa-folder-open', 'cor' => 'bg-blue-600', 'rota' => route('documentos.index')],
                             ['nome' => 'Treinamentos', 'icone' => 'fa-chalkboard-user', 'cor' => 'bg-indigo-600', 'rota' => route('treinamentos.index')],
-                            ['nome' => 'Treinamentos Usuários', 'icone' => 'fa-chalkboard-user', 'cor' => 'bg-indigo-500', 'rota' => route('treinamentos_usuarios.index')],
+                            ['nome' => 'Treinamentos Participantes', 'icone' => 'fa-chalkboard-user', 'cor' => 'bg-indigo-500', 'rota' => route('treinamentos_usuarios.index')],
                             ['nome' => 'Histórico', 'icone' => 'fa-user-graduate', 'cor' => 'bg-orange-600', 'rota' => route('historico_alteracoes.index')],
                             ['nome' => 'Não Conformidades', 'icone' => 'fa-triangle-exclamation', 'cor' => 'bg-rose-700', 'rota' => route('nao_conformidades.index')],
                             ['nome' => 'Riscos e Oportunidades', 'icone' => 'fa-scale-balanced', 'cor' => 'bg-amber-600', 'rota' => route('riscos_oportunidades.index')],

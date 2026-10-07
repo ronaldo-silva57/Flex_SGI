@@ -19,23 +19,21 @@ class PesquisaSatisfacaoRespostaController extends Controller
     public function index(Request $request)
     {
         $respostas = PesquisaSatisfacaoResposta::query()
-            ->whereHas('pesquisa', function ($q) {
-                $q->where('empresa_id', auth()->user()->empresa_id);
-            })
             ->with(['pesquisa:id,codigo,titulo', 'cliente:id,nome', 'respondente:id,name'])
             ->when($request->pesquisa_id, fn ($q) => $q->where('pesquisa_id', $request->pesquisa_id))
             ->when($request->classificacao, fn ($q) => $q->where('classificacao', $request->classificacao))
             ->when($request->busca, function ($q) use ($request) {
                 $q->whereHas('pesquisa', function ($qp) use ($request) {
                     $qp->where('titulo', 'ilike', "%{$request->busca}%")
-                       ->orWhere('codigo', 'ilike', "%{$request->busca}%");
+                    ->orWhere('codigo', 'ilike', "%{$request->busca}%");
                 });
             })
             ->latest('respondido_em')
             ->paginate(15)
             ->withQueryString();
 
-        $pesquisas = PesquisaSatisfacao::where('empresa_id', auth()->user()->empresa_id)
+        // Traz todas as pesquisas para o select de filtro da view
+        $pesquisas = PesquisaSatisfacao::query()
             ->orderBy('titulo')
             ->get(['id', 'codigo', 'titulo']);
 
@@ -89,15 +87,35 @@ class PesquisaSatisfacaoRespostaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-public function edit(PesquisaSatisfacaoResposta $respostas_pesquisa)
+    public function edit(PesquisaSatisfacaoResposta $pesquisasSatisfacaoResposta)
     {
-        $empresaId = auth()->user()->empresa_id;
+        $user = auth()->user();
+
+        // Eager loading para otimizar os relacionamentos
+        $pesquisasSatisfacaoResposta->load(['pesquisa', 'cliente', 'respondente']);
+
+        // Busca de listas respeitando o perfil (admin/multitenant)
+        $pesquisas = PesquisaSatisfacao::query()
+            ->when($user->empresa_id, fn ($q) => $q->where('empresa_id', $user->empresa_id))
+            ->orderBy('titulo')
+            ->get(['id', 'codigo', 'titulo']);
+
+        $clientes = Cliente::query()
+            ->when($user->empresa_id, fn ($q) => $q->where('empresa_id', $user->empresa_id))
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
+
+        $respondentes = User::query()
+            ->when($user->empresa_id, fn ($q) => $q->where('empresa_id', $user->empresa_id))
+            ->where('ativo', true)
+            ->orderBy('name')
+            ->get(['id', 'name']);
 
         return view('iso9001.pesquisas_satisfacao_respostas.edit', [
-            'resposta' => $respostas_pesquisa->load(['pesquisa', 'cliente', 'respondente']),
-            'pesquisas' => PesquisaSatisfacao::where('empresa_id', $empresaId)->get(['id', 'codigo', 'titulo']),
-            'clientes' => Cliente::where('empresa_id', $empresaId)->get(['id', 'nome']),
-            'respondentes' => User::where('empresa_id', $empresaId)->where('ativo', true)->get(['id', 'name']),
+            'resposta'     => $pesquisasSatisfacaoResposta,
+            'pesquisas'    => $pesquisas,
+            'clientes'     => $clientes,
+            'respondentes' => $respondentes,
         ]);
     }
 

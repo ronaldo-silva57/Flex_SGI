@@ -99,12 +99,24 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-3">
-                                        <a href="{{ route('objetivos_ambientais.show', $obj) }}" class="text-blue-600 hover:text-blue-900" title="Ver"><i class="fas fa-eye"></i></a>Visualizar
-                                        <a href="{{ route('objetivos_ambientais.edit', $obj) }}" class="text-indigo-600 hover:text-indigo-900" title="Editar"><i class="fas fa-edit"></i></a>Editar
+                                        <a href="{{ route('objetivos_ambientais.show', $obj) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                                        title="Visualizar">
+                                            <i class="fas fa-eye"></i>Visualizar
+                                        </a>
+                                        <a href="{{ route('objetivos_ambientais.edit', $obj) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
+                                            <i class="fas fa-edit"></i>Editar
+                                        </a>
                                         <form action="{{ route('objetivos_ambientais.destroy', $obj) }}" method="POST"
                                               onsubmit="return confirm('Excluir este objetivo?');" class="inline">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" title="Excluir"><i class="fas fa-trash-alt"></i></button> Excluir
+                                            <button type="submit"
+                                                class="inline-flex items-center px-2 py-1 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                                title="Excluir">
+                                                <i class="fas fa-trash"></i>Excluir
+                                            </button>
                                         </form>
                                     </div>
                                 </td>

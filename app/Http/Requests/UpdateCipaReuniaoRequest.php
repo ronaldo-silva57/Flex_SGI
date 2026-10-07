@@ -24,9 +24,9 @@ class UpdateCipaReuniaoRequest extends FormRequest
     {
     return [
             'empresa_id'            => ['sometimes', 'exists:empresas,id'],
-            'presidida_por_id'      => ['nullable', 'exists:users,id'],
-            'secretariada_por_id'   => ['nullable', 'exists:users,id'],
-            'gestao_ano'            => ['sometimes', 'string', 'max:10'],
+            'presidente_id'         => ['nullable', 'exists:users,id'],
+            'secretario_id'         => ['nullable', 'exists:users,id'],
+            'gestao_ano'            => ['required', 'string', 'regex:/^\d{4}\/\d{4}$/'],
             'tipo'                  => ['sometimes', 'in:Ordinária,Extraordinária,Inspeção de Campo,DDSGeral'],
             'data_reuniao'          => ['sometimes', 'date'],
             'pauta_principal'       => ['sometimes', 'string', 'max:255'],

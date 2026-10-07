@@ -30,14 +30,13 @@
             @endif
 
             <form
-                action="{{ route('planos_acao.update', $planosAcao) }}"
-                method="POST"
-            >
+                action="{{ route('planos_acao.update', $planoAcao) }}"
+                method="POST">
                 @csrf
                 @method('PUT')
 
                 @include('cadastros.planos_acao.partials.form', [
-                    'planoAcao' => $planosAcao,
+                    'planoAcao' => $planoAcao,
                     'usuarios' => $usuarios,
                 ])
 

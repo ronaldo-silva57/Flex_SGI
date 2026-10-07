@@ -65,6 +65,8 @@ class DatabaseSeeder extends Seeder
             MudancaGestaoSeeder::class,
             NaoConformidadeAmbientalSeeder::class,
 
+            CipaReuniaoSeeder::class,
+
             PlanoAcaoSeeder::class,
             AvaliacaoFornecedorSeeder::class,
 

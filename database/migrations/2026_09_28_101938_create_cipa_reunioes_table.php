@@ -13,11 +13,19 @@ return new class extends Migration
     {
         Schema::create('cipa_reunioes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
-            $table->foreignId('presidida_por_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('secretariada_por_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->cascadeOnDelete();
+            $table->foreignId('presidente_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->foreignId('secretario_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
-            $table->string('gestao_ano', 10)->comment('Ex: 2026/2027');
+            $table->string('gestao_ano', 9)->comment('Ex: 2026/2027');
             $table->enum('tipo', ['Ordinária', 'Extraordinária', 'Inspeção de Campo', 'DDSGeral']);
             $table->date('data_reuniao');
             $table->string('pauta_principal');
@@ -30,6 +38,8 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index(['empresa_id', 'data_reuniao']);
+            $table->index(['empresa_id', 'status']);
+            $table->index(['empresa_id', 'gestao_ano']);
             $table->index('tipo');
         });
     }

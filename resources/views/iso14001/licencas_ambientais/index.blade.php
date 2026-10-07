@@ -113,16 +113,22 @@
                                 </td>
                                 <td class="px-6 py-4 text-right text-sm">
                                     <div class="flex justify-end gap-3">
-                                        <a href="{{ route('licencas_ambientais.show', $licenca) }}" class="text-blue-600 hover:text-blue-900" title="Visualizar">
+                                        <a href="{{ route('licencas_ambientais.show', $licenca) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                                        title="Visualizar">
                                             <i class="fas fa-eye"></i>Visualizar
                                         </a>
-                                        <a href="{{ route('licencas_ambientais.edit', $licenca) }}" class="text-indigo-600 hover:text-indigo-900" title="Editar">
+                                        <a href="{{ route('licencas_ambientais.edit', $licenca) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
                                             <i class="fas fa-edit"></i>Editar
                                         </a>
                                         <form action="{{ route('licencas_ambientais.destroy', $licenca) }}" method="POST" onsubmit="return confirm('Deseja realmente excluir esta licença?');">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" title="Excluir">
-                                                <i class="fas fa-trash-alt"></i>Excluir
+                                            <button type="submit"
+                                                class="inline-flex items-center px-2 py-1 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                                title="Excluir">
+                                                <i class="fas fa-trash"></i>Excluir
                                             </button>
                                         </form>
                                     </div>

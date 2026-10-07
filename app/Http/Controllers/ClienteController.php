@@ -16,7 +16,6 @@ class ClienteController extends Controller
     {
         $search = $request->input('search');
         
-        // Substitua pelo método que você usa para obter o ID da empresa logada (Multi-tenant)
         $empresaId = auth()->user()->empresa_id ?? 1; 
 
         $clientes = Cliente::where('empresa_id', $empresaId)

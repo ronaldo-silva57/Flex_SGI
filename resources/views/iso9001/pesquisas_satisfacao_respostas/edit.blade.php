@@ -14,6 +14,7 @@
     <div class="py-6 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <form action="{{ route('pesquisas_satisfacao_respostas.update', $resposta) }}" method="POST">
+                @csrf
                 @method('PUT')
                 @include('iso9001.pesquisas_satisfacao_respostas.partials.form')
 

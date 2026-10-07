@@ -339,25 +339,25 @@
                                 <td class="px-4 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-1">
                                         <a href="{{ route('nao_conformidades.show', $nc) }}"
-                                           class="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition"
-                                           title="Visualizar" aria-label="Visualizar">
+                                        class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                                        title="Visualizar">
                                             <i class="fas fa-eye"></i>Visualizar
                                         </a>
                                         <a href="{{ route('nao_conformidades.edit', $nc) }}"
-                                           class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-md transition"
-                                           title="Editar" aria-label="Editar">
-                                            <i class="fas fa-pen"></i>Editar
+                                        class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
+                                            <i class="fas fa-edit"></i>Editar
                                         </a>
                                         <form action="{{ route('nao_conformidades.destroy', $nc) }}"
                                               method="POST"
                                               class="inline"
                                               onsubmit="return confirm('Tem certeza que deseja excluir a NC {{ $nc->codigo }}?');">
                                             @csrf @method('DELETE')
-                                            <button type="submit"
-                                                    class="p-2 text-red-600 hover:bg-red-50 rounded-md transition"
-                                                    title="Excluir" aria-label="Excluir">
-                                                <i class="fas fa-trash"></i>Excluir
-                                            </button>
+                                                <button type="submit"
+                                                    class="inline-flex items-center px-2 py-1 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                                    title="Excluir">
+                                                    <i class="fas fa-trash"></i>Excluir
+                                                </button>
                                         </form>
                                     </div>
                                 </td>

@@ -110,17 +110,23 @@
 
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-3">
-                                        <a href="{{ route('treinamentos.show', $treinamento) }}" class="text-blue-600 hover:text-blue-900 transition" title="Visualizar">
+                                        <a href="{{ route('treinamentos.show', $treinamento) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                                        title="Visualizar">
                                             <i class="fas fa-eye"></i>Visualizar
                                         </a>
-                                        <a href="{{ route('treinamentos.edit', $treinamento) }}" class="text-indigo-600 hover:text-indigo-900 transition" title="Editar">
+                                        <a href="{{ route('treinamentos.edit', $treinamento) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
                                             <i class="fas fa-edit"></i>Editar
                                         </a>
                                         <form action="{{ route('treinamentos.destroy', $treinamento) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este Treinamento?');">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 transition" title="Excluir">
-                                                <i class="fas fa-trash-alt"></i>Excluir
-                                            </button>
+                                        <button type="submit"
+                                            class="inline-flex items-center px-2 py-1 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                            title="Excluir">
+                                            <i class="fas fa-trash"></i>Excluir
+                                        </button>
                                         </form>
                                     </div>
                                 </td>

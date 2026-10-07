@@ -82,10 +82,9 @@
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><i class="fas fa-graduation-cap mr-1"></i>Treinamento</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><i class="fas fa-user mr-1"></i>Usuário</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><i class="fas fa-user mr-1"></i>Participante</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><i class="fas fa-calendar-check mr-1"></i>Conclusão</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><i class="fas fa-calendar-times mr-1"></i>Validade</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><i class="fas fa-star mr-1"></i>Nota</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><i class="fas fa-toggle-on mr-1"></i>Status</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase"><i class="fas fa-tools mr-1"></i>Ações</th>
                         </tr>
@@ -105,9 +104,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm {{ $p->esta_vencido ? 'text-red-600 font-semibold' : 'text-gray-600' }}">
                                     {{ $p->validade_ate?->format('d/m/Y') ?? '--' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                    {{ $p->nota !== null ? number_format($p->nota, 2, ',', '.') : '--' }}
-                                </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $p->status_badge }}">
                                         {{ $p->status }}
@@ -115,17 +112,23 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-3">
-                                        <a href="{{ route('treinamentos_usuarios.show', $p) }}" class="text-blue-600 hover:text-blue-900" title="Visualizar">
+                                        <a href="{{ route('treinamentos_usuarios.show', $p) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
+                                        title="Visualizar">
                                             <i class="fas fa-eye"></i>Visualizar
                                         </a>
-                                        <a href="{{ route('treinamentos_usuarios.edit', $p) }}" class="text-indigo-600 hover:text-indigo-900" title="Editar">
+                                        <a href="{{ route('treinamentos_usuarios.edit', $p) }}"
+                                        class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
+                                        title="Editar">
                                             <i class="fas fa-edit"></i>Editar
                                         </a>
                                         <form action="{{ route('treinamentos_usuarios.destroy', $p) }}" method="POST"
                                               onsubmit="return confirm('Excluir esta participação?');">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900" title="Excluir">
-                                                <i class="fas fa-trash-alt"></i>Excluir
+                                            <button type="submit"
+                                                class="inline-flex items-center px-2 py-1 bg-red-50 text-red-700 rounded hover:bg-red-100"
+                                                title="Excluir">
+                                                <i class="fas fa-trash"></i>Excluir
                                             </button>
                                         </form>
                                     </div>

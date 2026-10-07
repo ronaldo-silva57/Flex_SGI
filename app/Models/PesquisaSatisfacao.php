@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\Auditavel;
 
 class PesquisaSatisfacao extends Model
@@ -32,55 +31,30 @@ class PesquisaSatisfacao extends Model
     ];
 
     protected $casts = [
-        'data_inicio'     => 'date',
-        'data_fim'       => 'date',
-        'nota_media'     => 'decimal:2',
-        'total_respostas' => 'integer',
+        'data_inicio' => 'date',
+        'data_fim'    => 'date',
     ];
 
     /**
      * Relacionamentos
      */
-
-    public function empresa(): BelongsTo
+    public function empresa()
     {
         return $this->belongsTo(Empresa::class);
     }
 
-    public function cliente(): BelongsTo
+    public function cliente()
     {
         return $this->belongsTo(Cliente::class);
     }
 
-    public function responsavel(): BelongsTo
+    public function responsavel()
     {
         return $this->belongsTo(User::class, 'responsavel_id');
     }
-
-    public function respostas(): HasMany
+    
+    public function respostas()
     {
-        return $this->hasMany(
-            PesquisaSatisfacaoResposta::class,
-            'pesquisa_id'
-        );
-    }
-
-    /**
-     * Recalcula métricas a partir das respostas
-     */
-    public function recalculaMetricas(): void
-    {
-        $respostas = $this->respostas()->get();
-
-        $total = $respostas->count();
-
-        $media = $total > 0
-            ? $respostas->avg('nota')
-            : null;
-
-        $this->update([
-            'total_respostas' => $total,
-            'nota_media'      => $media,
-        ]);
+        return $this->hasMany(PesquisaSatisfacaoResposta::class, 'pesquisa_id');
     }
 }

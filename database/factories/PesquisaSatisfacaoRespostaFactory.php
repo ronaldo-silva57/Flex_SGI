@@ -13,29 +13,27 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PesquisaSatisfacaoRespostaFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = PesquisaSatisfacaoResposta::class;  
+
     public function definition(): array
     {
-$nota = fake()->randomFloat(2, 1, 10);
+        $nota = fake()->randomFloat(2, 1, 10);
         $classificacao = $nota >= 9 ? 'Promotor' : ($nota >= 7 ? 'Neutro' : 'Detrator');
 
         return [
-            'pesquisa_id' => PesquisaSatisfacao::first()?->id ?? 1,
-            'cliente_id' => Cliente::first()?->id,
-            'respondente_id' => User::first()?->id ?? 1,
-            'nota' => $nota,
-            'respostas_detalhadas' => json_encode([
+            'pesquisa_id'          => PesquisaSatisfacao::inRandomOrder()->value('id')
+                                        ?? PesquisaSatisfacao::factory(),
+            'cliente_id'           => Cliente::inRandomOrder()->value('id') ?? 1,  
+            'respondente_id'       => User::inRandomOrder()->value('id') ?? 1,
+            'nota'                 => $nota,
+            'respostas_detalhadas' => [
                 'qualidade_produto' => fake()->numberBetween(1, 5),
-                'tempo_entrega' => fake()->numberBetween(1, 5),
-                'atendimento' => fake()->numberBetween(1, 5),
-                'comentarios' => fake()->sentence(),
-            ]),
-            'classificacao' => $classificacao,
-            'respondido_em' => now(),
+                'tempo_entrega'     => fake()->numberBetween(1, 5),
+                'atendimento'       => fake()->numberBetween(1, 5),
+                'comentarios'       => fake()->sentence(),
+            ],
+            'classificacao'        => $classificacao,
+            'respondido_em'        => now(),
         ];
     }
 }

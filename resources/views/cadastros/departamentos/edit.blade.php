@@ -17,7 +17,6 @@
                 @csrf
                 @method('PUT')
                 @include('cadastros.departamentos.partials.form')
-                <p>Empresa: {{ $empresa->razao_social ?? 'não definida' }}</p>
                 <div class="mt-8 flex justify-end gap-3 border-t pt-6">
                     <a href="{{ route('departamentos.index') }}"
                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">

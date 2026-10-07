@@ -18,13 +18,12 @@ class PesquisaSatisfacaoController extends Controller
     public function index(Request $request)
     {
         $pesquisas = PesquisaSatisfacao::query()
-            ->where('empresa_id', auth()->user()->empresa_id)
             ->with(['cliente:id,nome', 'responsavel:id,name'])
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->when($request->tipo,   fn ($q) => $q->where('tipo', $request->tipo))
             ->when($request->busca,  fn ($q) => $q->where(function ($q) use ($request) {
                 $q->where('titulo', 'ilike', "%{$request->busca}%")
-                  ->orWhere('codigo', 'ilike', "%{$request->busca}%");
+                ->orWhere('codigo', 'ilike', "%{$request->busca}%");
             }))
             ->orderByDesc('data_inicio')
             ->paginate(15)
@@ -66,12 +65,26 @@ class PesquisaSatisfacaoController extends Controller
      */
     public function show(PesquisaSatisfacao $pesquisaSatisfacao)
     {
+        $user = auth()->user();
+
+        // 1. Garantia de isolamento de tenant (impede acesso a dados de outras empresas)
+        if ($user->empresa_id && $pesquisaSatisfacao->empresa_id !== $user->empresa_id) {
+            abort(403, 'Acesso não autorizado a este registro.');
+        }
+
+        // 2. Eager loading dos dados principais
         $pesquisaSatisfacao->load([
-            'cliente', 'responsavel',
-            'respostas.cliente', 'respostas.respondente',
+            'cliente:id,nome',
+            'responsavel:id,name',
         ]);
 
-        return view('iso9001.pesquisas_satisfacao.show', compact('pesquisaSatisfacao'));
+        // 3. Carrega as respostas ordenadas e com paginação própria se necessário na view
+        $respostas = $pesquisaSatisfacao->respostas()
+            ->with(['cliente:id,nome', 'respondente:id,name'])
+            ->latest('respondido_em')
+            ->paginate(10);
+
+        return view('iso9001.pesquisas_satisfacao.show', compact('pesquisaSatisfacao', 'respostas'));
     }
 
     /**

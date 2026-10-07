@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\Auditavel;
 use App\Models\Empresa;
-use App\Models\Cliente;
 use App\Models\User;
-use App\Models\PesquisaSatisfacaoResposta;
 
 class EquipamentoMedicao extends Model
 {
@@ -20,10 +18,20 @@ class EquipamentoMedicao extends Model
     protected $table = 'equipamentos_medicao';
 
     protected $fillable = [
-        'empresa_id', 'responsavel_id', 'codigo', 'nome', 'marca', 'modelo',
-        'numero_serie', 'faixa_medicao', 'resolucao', 'localizacao',
-        'periodicidade_calibracao_meses', 'ultima_calibracao',
-        'proxima_calibracao', 'status',
+        'empresa_id', 
+        'responsavel_id', 
+        'codigo', 
+        'nome', 
+        'marca', 
+        'modelo',
+        'numero_serie', 
+        'faixa_medicao', 
+        'resolucao', 
+        'localizacao',
+        'periodicidade_calibracao_meses', 
+        'ultima_calibracao',
+        'proxima_calibracao', 
+        'status',
     ];
 
     protected $casts = [
