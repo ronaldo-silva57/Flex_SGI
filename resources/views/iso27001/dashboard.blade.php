@@ -20,6 +20,7 @@
                                 ['nome' => 'Segurança', 'icone' => 'fa-shield-halved', 'cor' => 'bg-blue-800', 'rota' => route('controles_seguranca.index')],
                                 ['nome' => 'Incidentes Segurança', 'icone' => 'fa-shield', 'cor' => 'bg-red-700', 'rota' => route('incidentes_seguranca.index')],
                                 ['nome' => 'Riscos de TI', 'icone' => 'fa-shield-cat', 'cor' => 'bg-indigo-700', 'rota' => route('analises_risco_ti.index')],
+                                ['nome' => 'SOA - Declaração de Aplicabilidade', 'icone' => 'fa-shield-cat', 'cor' => 'bg-indigo-700', 'rota' => route('soa_controles.index')],
                             ];
                         @endphp
 

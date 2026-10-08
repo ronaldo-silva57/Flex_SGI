@@ -86,6 +86,8 @@ class DatabaseSeeder extends Seeder
             ExameMedicoSeeder::class,
 
             AnaliseRiscoTiSeeder::class,
+
+            SoaControleSeeder::class,
         ]);
     }
 }

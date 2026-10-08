@@ -57,7 +57,7 @@ use App\Http\Controllers\AnaliseIshikawaController;
 use App\Http\Controllers\IshikawaCausaController;
 use App\Http\Controllers\RelatorioNaoConformidadeController;
 use App\Http\Controllers\GestaoResiduoController;
-
+use App\Http\Controllers\SoaControleController;
 
 use App\Http\Controllers\PesquisaSatisfacaoController;
 use App\Http\Controllers\PesquisaSatisfacaoRespostaController;
@@ -95,6 +95,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('departamentos', DepartamentoController::class);
     Route::resource('fornecedores', FornecedorController::class)->parameters(['fornecedores' => 'fornecedor']);
     Route::resource('clientes', ClienteController::class)->parameters(['clientes' => 'cliente']);
+
+    Route::resource('soa_controles', SoaControleController::class);
+    Route::post('soa_controles/{soa_controle}/upload-evidencia', [SoaControleController::class, 'uploadEvidencia'])
+    ->name('soa_controles.upload-evidencia');
+    Route::get('soa_controles/{soa_controle}/download-evidencia', [SoaControleController::class, 'downloadEvidencia'])
+    ->name('soa_controles.download-evidencia');
+
 
     Route::resource('normas', NormaController::class);
     Route::resource('clausulas', ClausulaController::class);
