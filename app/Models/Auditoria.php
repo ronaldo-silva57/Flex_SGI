@@ -11,6 +11,8 @@ class Auditoria extends Model
 {
     use HasFactory, SoftDeletes, Auditavel;
 
+    protected $table = 'auditorias';
+    
     protected $fillable = [
         'empresa_id',
         'norma_id',

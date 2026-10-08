@@ -28,6 +28,9 @@ class MudancaGestao extends Model
         'data_implementacao' => 'date',
     ];
 
+    /**
+     * Relacionamentos
+     */
     public function empresa(): BelongsTo              
     { 
         return $this->belongsTo(Empresa::class); 

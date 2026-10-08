@@ -22,7 +22,7 @@ class AvaliacaoFornecedorFactory extends Factory
      */
     public function definition(): array
     {
-$notaQualidade = fake()->randomFloat(2, 60, 100);
+        $notaQualidade = fake()->randomFloat(2, 60, 100);
         $notaPrazo = fake()->randomFloat(2, 50, 100);
         $notaAtendimento = fake()->randomFloat(2, 70, 100);
         $notaEsg = fake()->randomFloat(2, 60, 100);

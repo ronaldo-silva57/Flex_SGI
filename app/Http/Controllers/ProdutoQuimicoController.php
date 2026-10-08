@@ -111,7 +111,6 @@ class ProdutoQuimicoController extends Controller
 
     public function downloadFispq(ProdutoQuimico $produtoQuimico)
     {
-        // Altere de 'local' para 'public' para coincidir com o upload
         $disco = 'public';
 
         if (! $produtoQuimico->arquivo_fispq_path

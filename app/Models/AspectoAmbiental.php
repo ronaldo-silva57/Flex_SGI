@@ -31,7 +31,7 @@ class AspectoAmbiental extends Model
     ];
 
     /**
-     * Relaconamentos
+     * Relacionamentos
      */
     public function empresa()
     {

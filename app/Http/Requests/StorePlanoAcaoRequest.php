@@ -27,7 +27,6 @@ class StorePlanoAcaoRequest extends FormRequest
             'responsavel_id'        => ['nullable', 'integer', 'exists:users,id'],
             'origem_type'           => ['nullable', 'string'],
             'origem_id'             => ['nullable', 'integer', 'required_with:origem_type'],
-            
             'codigo'                => ['nullable', 'string', 'max:50'],
             'titulo'                => ['required', 'string', 'max:255'],
             'o_que'                 => ['required', 'string'],

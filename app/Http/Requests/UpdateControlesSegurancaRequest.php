@@ -23,15 +23,15 @@ class UpdateControlesSegurancaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'            => ['required','exists:empresas,id'],
-            'ativo_id'              => ['nullable','exists:ativos_informacao,id'],
-            'codigo_anexo_a'        => ['nullable','string','max:20'],
-            'titulo'                => ['required','string','max:255'],
-            'descricao'             => ['nullable','string'],
+            'empresa_id'            => ['sometimes', 'exists:empresas,id'],
+            'ativo_id'              => ['nullable', 'exists:ativos_informacao,id'],
+            'codigo_anexo_a'        => ['nullable', 'string','max:20'],
+            'titulo'                => ['sometimes', 'string','max:255'],
+            'descricao'             => ['nullable', 'string'],
             'implementado'          => ['boolean'],
-            'evidencia'             => ['nullable','string'],
-            'responsavel_id'        => ['nullable','exists:users,id'],
-            'data_implementacao'    => ['nullable','date'],
+            'evidencia'             => ['nullable', 'string'],
+            'responsavel_id'        => ['nullable', 'exists:users,id'],
+            'data_implementacao'    => ['nullable', 'date'],
         ];
     }
 }

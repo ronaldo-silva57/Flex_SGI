@@ -24,13 +24,13 @@ class UpdateEsgMonitoramentoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'esg_indicador_id'      => ['required', 'exists:esg_indicadores,id'],
+            'esg_indicador_id'      => ['sometimes', 'exists:esg_indicadores,id'],
             'responsavel_id'        => ['nullable', 'exists:users,id'],
-            'periodo_referencia'    => ['required', 'date'],
+            'periodo_referencia'    => ['sometimes', 'date'],
             'valor_realizado'       => ['nullable', 'numeric', 'between:-99999999.99,99999999.99'],
             'valor_meta'            => ['nullable', 'numeric', 'between:-99999999.99,99999999.99'],
             'analise'               => ['nullable', 'string'],
-            'status'                => ['required', Rule::in(['No prazo', 'Atrasado', 'Concluído'])],
+            'status'                => ['sometimes', Rule::in(['No prazo', 'Atrasado', 'Concluído'])],
         ];
     }
 }

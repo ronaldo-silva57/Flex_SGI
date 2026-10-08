@@ -29,7 +29,7 @@ class Cliente extends Model
     ];
 
     /**
-     * Relacionamento com a Empresa (Tenant)
+     * Relacionamento
      */
     public function empresa(): BelongsTo
     {

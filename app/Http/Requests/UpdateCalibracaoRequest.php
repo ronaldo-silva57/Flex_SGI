@@ -29,7 +29,7 @@ class UpdateCalibracaoRequest extends FormRequest
             'data_validade'         => ['sometimes', 'date', 'after_or_equal:data_calibracao'],
             'laboratorio'           => ['nullable', 'string', 'max:255'],
             'certificado_numero'    => ['nullable', 'string', 'max:100'],
-            'certificado'      => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'], // 10MB
+            'certificado'           => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'], // 10MB
             'resultado'             => ['sometimes', 'in:Aprovado,Aprovado com restrição,Reprovado'],
             'observacoes'           => ['nullable', 'string'],
         ];

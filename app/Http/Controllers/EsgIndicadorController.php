@@ -25,8 +25,8 @@ class EsgIndicadorController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('codigo', 'LIKE', "%{$search}%")
-                  ->orWhere('nome', 'LIKE', "%{$search}%");
+                $q->where('codigo', 'ilike', "%{$search}%")
+                  ->orWhere('nome', 'ilike', "%{$search}%");
             });
         }
 

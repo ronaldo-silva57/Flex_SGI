@@ -25,11 +25,7 @@ class StoreDepartamentoRequest extends FormRequest
     {
         return [
             'empresa_id'     => ['required', 'exists:empresas,id'],
-            'codigo' => [
-            'required',
-            'string',
-            'max:50',
-            // Na criação:
+            'codigo' => ['required', 'string', 'max:50',
             Rule::unique('departamentos', 'codigo'),
         ],
             'nome'           => ['required', 'string', 'max:255'],

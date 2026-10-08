@@ -15,8 +15,15 @@ class AcaoCorretiva extends Model
     protected $table = 'acoes_corretivas';
 
     protected $fillable = [
-        'nao_conformidade_id', 'responsavel_id', 'etapa', 'descricao',
-        'prazo', 'data_execucao', 'eficaz', 'evidencia', 'status',
+        'nao_conformidade_id', 
+        'responsavel_id', 
+        'etapa', 
+        'descricao',
+        'prazo', 
+        'data_execucao', 
+        'eficaz', 
+        'evidencia', 
+        'status',
     ];
 
     protected $casts = [

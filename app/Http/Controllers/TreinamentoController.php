@@ -19,8 +19,8 @@ class TreinamentoController extends Controller
         $query = Treinamento::with(['responsavel', 'empresa']);
 
         if($search = $request->input('search')) {
-            $query->where('titulo', 'like', "%{$search}%")
-                    ->orWhere('tipo', 'like', "%{$search}%");               
+            $query->where('titulo', 'ilike', "%{$search}%")
+                    ->orWhere('tipo', 'ilike', "%{$search}%");               
         }
 
         $treinamentos = $query->latest()->paginate(15);

@@ -84,6 +84,8 @@ class DatabaseSeeder extends Seeder
             MonitoramentoAmbientalSeeder::class,
 
             ExameMedicoSeeder::class,
+
+            AnaliseRiscoTiSeeder::class,
         ]);
     }
 }

@@ -24,8 +24,8 @@ class PerigoRiscoController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('descricao_perigo', 'LIKE', "%{$search}%")
-                  ->orWhere('risco_associado', 'LIKE', "%{$search}%");
+                $q->where('descricao_perigo', 'ilike', "%{$search}%")
+                  ->orWhere('risco_associado', 'ilike', "%{$search}%");
             });
         }
 

@@ -27,10 +27,7 @@ class UpdateProcessoRequest extends FormRequest
             'empresa_id'       => ['nullable', 'exists:empresas,id'],
             'departamento_id'  => ['nullable', 'exists:departamentos,id'],
             'responsavel_id'   => ['nullable', 'exists:users,id'],
-            'codigo'           => [
-                                    'nullable',
-                                    'string',
-                                    'max:50',
+            'codigo'           => ['nullable', 'string', 'max:50',
                                     Rule::unique('processos', 'codigo')->ignore($this->route('processo'))
                                 ],
             'nome'             => ['nullable', 'string', 'max:255'],

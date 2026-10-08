@@ -24,9 +24,9 @@ class UpdateStakeholderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'   => ['required', 'exists:empresas,id'],
-            'nome'         => ['required', 'string', 'max:255'],
-            'tipo'         => ['required', Rule::in(['Cliente', 'Colaborador', 'Fornecedor', 'Comunidade', 'Investidor', 'Governo', 'Outros'])],
+            'empresa_id'   => ['sometimes', 'exists:empresas,id'],
+            'nome'         => ['sometimes', 'string', 'max:255'],
+            'tipo'         => ['sometimes', Rule::in(['Cliente', 'Colaborador', 'Fornecedor', 'Comunidade', 'Investidor', 'Governo', 'Outros'])],
             'contato'      => ['nullable', 'string', 'max:255'],
             'expectativas' => ['nullable', 'string'],
             'necessidades' => ['nullable', 'string'],

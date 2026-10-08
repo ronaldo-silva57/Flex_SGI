@@ -25,8 +25,8 @@ class AspectoAmbientalController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('descricao', 'LIKE', "%{$search}%")
-                  ->orWhere('tipo', 'LIKE', "%{$search}%");
+                $q->where('descricao', 'ilike', "%{$search}%")
+                  ->orWhere('tipo', 'ilike', "%{$search}%");
             });
         }
 

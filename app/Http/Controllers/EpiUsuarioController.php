@@ -28,8 +28,8 @@ class EpiUsuarioController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('epi', fn($e) => $e->where('nome', 'LIKE', "%{$search}%"))
-                  ->orWhereHas('usuario', fn($u) => $u->where('name', 'LIKE', "%{$search}%"));
+                $q->whereHas('epi', fn($e) => $e->where('nome', 'ilike', "%{$search}%"))
+                  ->orWhereHas('usuario', fn($u) => $u->where('name', 'ilike', "%{$search}%"));
             });
         }
 

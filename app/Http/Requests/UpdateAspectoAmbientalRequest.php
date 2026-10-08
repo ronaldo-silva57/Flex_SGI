@@ -23,16 +23,16 @@ class UpdateAspectoAmbientalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'        => ['required', 'exists:empresas,id'],
+            'empresa_id'        => ['sometimes', 'exists:empresas,id'],
             'processo_id'       => ['nullable', 'exists:processos,id'],
             'responsavel_id'    => ['nullable', 'exists:users,id'],
-            'descricao'         => ['required', 'string'],
-            'tipo'              => ['required', 'in:Emissao ar,Efluente,Resíduo,Ruído,Uso recurso,Outros'],
+            'descricao'         => ['sometimes', 'string'],
+            'tipo'              => ['sometimes', 'in:Emissao ar,Efluente,Resíduo,Ruído,Uso recurso,Outros'],
             'impacto_associado' => ['nullable', 'string'],
             'significancia'     => ['nullable', 'integer', 'min:1', 'max:5'],
             'controle_existente'=> ['nullable', 'string'],
             'programa_gestao'   => ['nullable', 'string'],
-            'status'            => ['required', 'in:ativo,inativo'],
+            'status'            => ['sometimes', 'in:ativo,inativo'],
         ];
     }
 

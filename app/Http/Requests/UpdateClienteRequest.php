@@ -18,19 +18,16 @@ class UpdateClienteRequest extends FormRequest
         $empresaId = auth()->user()->empresa_id ?? $this->input('empresa_id');
 
         return [
-            'empresa_id'                => ['required', 'exists:empresas,id'],
+            'empresa_id'                => ['sometimes', 'exists:empresas,id'],
             'tipo_documento'            => ['nullable', 'in:cpf,cnpj'],
-            'documento'                 => [
-                                                'nullable', 
-                                                'string', 
-                                                'max:20',
+            'documento'                 => ['nullable',  'string',  'max:20',
                                                 // Ignora o ID atual ao validar a unicidade na edição
                                                 Rule::unique('clientes')->where(function ($query) use ($empresaId) {
                                                     return $query->where('empresa_id', $empresaId)
                                                                 ->where('tipo_documento', $this->input('tipo_documento'));
                                                 })->ignore($clienteId)
                                             ],
-            'nome'                      => ['required', 'string', 'max:255'],
+            'nome'                      => ['sometimes', 'string', 'max:255'],
             'razao_social'              => ['nullable', 'string', 'max:255'],
             'contato_principal'         => ['nullable', 'string', 'max:255'],
             'email'                     => ['nullable', 'email', 'max:255'],
@@ -38,7 +35,7 @@ class UpdateClienteRequest extends FormRequest
             'cidade'                    => ['nullable', 'string', 'max:100'],
             'estado'                    => ['nullable', 'string', 'size:2'],
             'endereco_completo'         => ['nullable', 'string'],
-            'status'                    => ['required', 'in:ativo,inativo,bloqueado_sgi'],
+            'status'                    => ['sometimes', 'in:ativo,inativo,bloqueado_sgi'],
             'observacoes_compliance'    => ['nullable', 'string'],
         ];
     }

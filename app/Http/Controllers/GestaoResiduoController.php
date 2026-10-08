@@ -21,9 +21,9 @@ public function index(Request $request)
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('codigo', 'like', "%{$search}%")
-                  ->orWhere('descricao', 'like', "%{$search}%")
-                  ->orWhere('fonte_geradora', 'like', "%{$search}%");
+                $q->where('codigo', 'ilike', "%{$search}%")
+                  ->orWhere('descricao', 'ilike', "%{$search}%")
+                  ->orWhere('fonte_geradora', 'ilike', "%{$search}%");
             });
         }
 

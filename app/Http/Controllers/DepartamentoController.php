@@ -76,7 +76,6 @@ public function index(Request $request)
      */
     public function edit(Departamento $departamento): View
     {
-        // Carrega a empresa relacionada (evita N+1)
         $departamento->load('empresa');
         $empresa       = $departamento->empresa;         
         $usuarioLogado = auth()->user();                 

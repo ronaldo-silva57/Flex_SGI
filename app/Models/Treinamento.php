@@ -14,6 +14,8 @@ class Treinamento extends Model
 {
     use HasFactory, SoftDeletes, Auditavel;
 
+    protected $table = 'treinamentos';
+    
     protected $fillable = [
         'empresa_id',
         'responsavel_id',

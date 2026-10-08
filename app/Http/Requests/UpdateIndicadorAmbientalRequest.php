@@ -17,7 +17,7 @@ class UpdateIndicadorAmbientalRequest extends FormRequest
             'codigo'         => ['sometimes','string','max:50'],
             'nome'           => ['sometimes','string','max:255'],
             'descricao'      => ['nullable','string'],
-            'categoria'      => ['required','in:Emissões Atmosféricas,Recursos Hídricos,Energia,Resíduos,Biodiversidade,Uso do Solo,Ruído,Outros'],
+            'categoria'      => ['sometimes','in:Emissões Atmosféricas,Recursos Hídricos,Energia,Resíduos,Biodiversidade,Uso do Solo,Ruído,Outros'],
             'formula'        => ['nullable','string'],
             'meta'           => ['nullable','numeric'],
             'unidade_medida' => ['nullable','string','max:50'],

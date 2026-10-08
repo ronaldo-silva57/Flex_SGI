@@ -19,11 +19,7 @@ class StoreClienteRequest extends FormRequest
         return [
             'empresa_id' => ['required', 'exists:empresas,id'],
             'tipo_documento' => ['nullable', 'in:cpf,cnpj'],
-            'documento' => [
-                'nullable', 
-                'string', 
-                'max:20',
-                // Regra composta da nossa migration: único por empresa_id
+            'documento' => ['nullable',  'string',  'max:20',
                 Rule::unique('clientes')->where(function ($query) use ($empresaId) {
                     return $query->where('empresa_id', $empresaId)
                                  ->where('tipo_documento', $this->input('tipo_documento'));

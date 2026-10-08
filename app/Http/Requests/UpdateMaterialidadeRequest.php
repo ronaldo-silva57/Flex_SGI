@@ -24,11 +24,11 @@ class UpdateMaterialidadeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'                => ['required', 'exists:empresas,id'],
+            'empresa_id'                => ['sometimes', 'exists:empresas,id'],
             'esg_indicador_id'          => ['nullable', 'exists:esg_indicadores,id'],
-            'tema'                      => ['required', 'string', 'max:255'],
-            'importancia_stakeholders'  => ['required', 'integer', 'between:1,5'],
-            'importancia_negocio'       => ['required', 'integer', 'between:1,5'],
+            'tema'                      => ['sometimes', 'string', 'max:255'],
+            'importancia_stakeholders'  => ['sometimes', 'integer', 'between:1,5'],
+            'importancia_negocio'       => ['sometimes', 'integer', 'between:1,5'],
             'classificacao'             => ['nullable', Rule::in(['Baixa', 'Média', 'Alta', 'Crítica'])],
         ];
     }

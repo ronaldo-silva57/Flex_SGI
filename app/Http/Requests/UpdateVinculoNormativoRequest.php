@@ -24,9 +24,9 @@ class UpdateVinculoNormativoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'norma_id'              => ['required', 'exists:normas,id'],
-            'clausula_id'           => ['required', 'exists:clausulas,id'],
-            'processo_id'           => ['required', 'exists:processos,id'],
+            'norma_id'              => ['sometimes', 'exists:normas,id'],
+            'clausula_id'           => ['sometimes', 'exists:clausulas,id'],
+            'processo_id'           => ['sometimes', 'exists:processos,id'],
             'documento_id'          => ['nullable', 'exists:documentos,id'],
             'indicador_id'          => ['nullable', 'exists:indicadores,id'],
             'risco_id'              => ['nullable', 'exists:riscos_oportunidades,id'],

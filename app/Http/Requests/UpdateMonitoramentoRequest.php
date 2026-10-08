@@ -23,14 +23,14 @@ class UpdateMonitoramentoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'indicador_id'       => ['required', 'exists:indicadores,id'],
+            'indicador_id'       => ['sometimes', 'exists:indicadores,id'],
             'responsavel_id'     => ['nullable', 'exists:users,id'],
-            'periodo_referencia' => ['required', 'string', 'max:20'],
+            'periodo_referencia' => ['sometimes', 'string', 'max:20'],
             'valor_realizado'    => ['nullable', 'numeric', 'between:-99999999.99,99999999.99'],
             'valor_meta'         => ['nullable', 'numeric', 'between:-99999999.99,99999999.99'],
             'analise'            => ['nullable', 'string'],
             'acao_necessaria'    => ['nullable', 'string'],
-            'status'             => ['required', 'in:No prazo,Atrasado,Concluído'],
+            'status'             => ['sometimes', 'in:No prazo,Atrasado,Concluído'],
         ];
     }
 }

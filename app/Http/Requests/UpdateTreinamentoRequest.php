@@ -23,15 +23,15 @@ class UpdateTreinamentoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'        => ['required', 'exists:empresas,id'],
+            'empresa_id'        => ['sometimes', 'exists:empresas,id'],
             'responsavel_id'    => ['nullable', 'exists:users,id'],
-            'titulo'            => ['required', 'string', 'max:255'],
+            'titulo'            => ['sometimes', 'string', 'max:255'],
             'descricao'         => ['nullable', 'string'],
             'conteudo'          => ['nullable', 'string'],
             'carga_horaria'     => ['nullable', 'integer', 'min:1'],
-            'tipo'              => ['required', 'in:Obrigatório,Recomendado,Capacitação'],
+            'tipo'              => ['sometimes', 'in:Obrigatório,Recomendado,Capacitação'],
             'validade_meses'    => ['nullable', 'integer', 'min:1'],
-            'status'            => ['required', 'in:Ativo,Inativo'],   
+            'status'            => ['sometimes', 'in:Ativo,Inativo'],   
         ];
     }
 }

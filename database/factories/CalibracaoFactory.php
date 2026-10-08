@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CalibracaoFactory extends Factory
 {
+    protected $model = Calibracao::class;
+    
     /**
      * Define the model's default state.
      *
@@ -23,8 +25,8 @@ $dataCalibracao = fake()->dateTimeBetween('-6 months', 'now');
         $dataValidade = (clone $dataCalibracao)->modify('+1 year');
 
         return [
-            'equipamento_id' => EquipamentoMedicao::first()?->id ?? 1,
-            'responsavel_id' => User::first()?->id ?? 1,
+            'equipamento_id' => EquipamentoMedicao::first()->id, 
+            'responsavel_id' => User::first()->id,
             'data_calibracao' => $dataCalibracao->format('Y-m-d'),
             'data_validade' => $dataValidade->format('Y-m-d'),
             'laboratorio' => fake()->company() . ' Metrologia RBC',

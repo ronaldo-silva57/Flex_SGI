@@ -24,8 +24,8 @@ class IncidenteAcidenteController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('descricao', 'LIKE', "%{$search}%")
-                  ->orWhere('local', 'LIKE', "%{$search}%");
+                $q->where('descricao', 'ilike', "%{$search}%")
+                  ->orWhere('local', 'ilike', "%{$search}%");
             });
         }
 

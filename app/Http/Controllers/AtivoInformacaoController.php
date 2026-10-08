@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AnaliseRiscoTI;
 use App\Models\AtivoInformacao;
 use App\Models\Empresa;
 use App\Models\User;
-use App\Http\Requests\StoreAnaliseRiscoTIRequest;
-use App\Http\Requests\UpdateAnaliseRiscoTIRequest;
+use App\Http\Requests\StoreAtivosInformacaoRequest;
+use App\Http\Requests\UpdateAtivosInformacaoRequest;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
 class AtivoInformacaoController extends Controller
@@ -18,173 +15,85 @@ class AtivoInformacaoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
-        $empresaId = $request->user()->empresa_id;
-
-        $query = AnaliseRiscoTI::query()
-            ->with(['ativo', 'responsavel'])
-            ->where('empresa_id', $empresaId);
+        $empresa = Empresa::first();
+        $query = AtivoInformacao::where('empresa_id', $empresa->id);
 
         if ($request->filled('search')) {
             $search = $request->search;
-
             $query->where(function ($q) use ($search) {
-                $q->where('ameaca', 'ilike', "%{$search}%")
-                    ->orWhere('vulnerabilidade', 'ilike', "%{$search}%")
-                    ->orWhereHas('ativo', function ($ativoQuery) use ($search) {
-                        $ativoQuery->where('nome', 'ilike', "%{$search}%");
-                    });
+                $q->where('nome', 'LIKE', "%{$search}%")
+                  ->orWhere('descricao', 'LIKE', "%{$search}%")
+                  ->orWhere('localizacao', 'LIKE', "%{$search}%");
             });
         }
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
+        $ativos = $query->with(['responsavel', 'proprietario'])->orderBy('nome')->paginate(15);
 
-        $analises = $query
-            ->orderByDesc('id')
-            ->paginate(15)
-            ->withQueryString();
-
-        return view(
-            'iso27001.analises_risco_ti.index',
-            compact('analises')
-        );
+        return view('iso27001.ativos_informacao.index', compact('ativos'));
     }
-
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request): View
+    public function create()
     {
-        $empresa = Empresa::find($request->user()->empresa_id);
-
-        $ativos = AtivoInformacao::query()
-            ->where('empresa_id', $request->user()->empresa_id)
-            ->where('status', 'Ativo')
-            ->orderBy('nome')
-            ->get();
-
-        $usuarios = User::query()
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        return view(
-            'iso27001.analises_risco_ti.create',
-            compact('empresa', 'ativos', 'usuarios')
-        );
+        $empresa = Empresa::first();
+        $usuarios = User::all(); // ou filtrar por empresa
+        return view('iso27001.ativos_informacao.create', compact('empresa', 'usuarios'));
     }
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(
-        StoreAnaliseRiscoTIRequest $request
-    ): RedirectResponse {
-
-        $dados = $request->validated();
-
-        if (empty($dados['responsavel_id'])) {
-            $dados['responsavel_id'] = Auth::id();
+    public function store(StoreAtivosInformacaoRequest $request)
+    {
+        $validated = $request->validated();
+        if (empty($validated['responsavel_id'])) {
+            $validated['responsavel_id'] = Auth::id();
         }
+        AtivoInformacao::create($validated);
 
-        $dados['empresa_id'] = $request->user()->empresa_id;
-
-        AnaliseRiscoTI::create($dados);
-
-        return redirect()
-            ->route('analises_risco_ti.index')
-            ->with(
-                'success',
-                'Análise de risco de TI criada com sucesso.'
-            );
+        return redirect()->route('ativos_informacao.index')->with('success', 'Ativo de informação criado com sucesso.');
     }
+
     /**
      * Display the specified resource.
      */
-    public function show(
-        AnaliseRiscoTI $analisesRiscoTi
-    ): View {
-
-        $analisesRiscoTi->load([
-            'empresa',
-            'ativo',
-            'responsavel',
-        ]);
-
-        return view(
-            'iso27001.analises_risco_ti.show',
-            compact('analisesRiscoTi')
-        );
+    public function show(AtivoInformacao $ativosInformacao)
+    {
+        $ativosInformacao->load(['responsavel', 'proprietario', 'controles', 'incidentes']);
+        return view('iso27001.ativos_informacao.show', compact('ativosInformacao'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(
-        AnaliseRiscoTI $analisesRiscoTi
-    ): View {
-
-        $empresa = Empresa::find($analisesRiscoTi->empresa_id);
-
-        $ativos = AtivoInformacao::query()
-            ->where('empresa_id', $analisesRiscoTi->empresa_id)
-            ->orderBy('nome')
-            ->get();
-
-        $usuarios = User::query()
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        return view(
-            'iso27001.analises_risco_ti.edit',
-            compact(
-                'analisesRiscoTi',
-                'empresa',
-                'ativos',
-                'usuarios'
-            )
-        );
+    public function edit(AtivoInformacao $ativosInformacao)
+    {
+        $empresa = Empresa::find($ativosInformacao->empresa_id);
+        $usuarios = User::all();
+        return view('iso27001.ativos_informacao.edit', compact('ativosInformacao', 'empresa', 'usuarios'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(
-        UpdateAnaliseRiscoTIRequest $request,
-        AnaliseRiscoTI $analisesRiscoTi
-    ): RedirectResponse {
+    public function update(UpdateAtivosInformacaoRequest $request, AtivoInformacao $ativosInformacao)
+    {
+        $validated = $request->validated();
+        $ativosInformacao->update($validated);
 
-        $dados = $request->validated();
-
-        // Mantém a empresa original.
-        $dados['empresa_id'] = $analisesRiscoTi->empresa_id;
-
-        $analisesRiscoTi->update($dados);
-
-        return redirect()
-            ->route('analises_risco_ti.index')
-            ->with(
-                'success',
-                'Análise de risco de TI atualizada com sucesso.'
-            );
+        return redirect()->route('ativos_informacao.index')->with('success', 'Ativo atualizado com sucesso.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(
-        AnaliseRiscoTI $analisesRiscoTi
-    ): RedirectResponse {
-
-        $analisesRiscoTi->delete();
-
-        return redirect()
-            ->route('analises_risco_ti.index')
-            ->with(
-                'success',
-                'Análise de risco de TI excluída com sucesso.'
-            );
+    public function destroy(AtivoInformacao $ativosInformacao)
+    {
+        $ativosInformacao->delete();
+        return redirect()->route('ativos_informacao.index')->with('success', 'Ativo excluído com sucesso.');
     }
 }

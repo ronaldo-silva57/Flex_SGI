@@ -20,9 +20,9 @@ class LicencaAmbientalController extends Controller
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
-                $q->where('numero', 'like', "%{$search}%")
-                  ->orWhere('orgao_emissor', 'like', "%{$search}%")
-                  ->orWhere('descricao', 'like', "%{$search}%");
+                $q->where('numero', 'ilike', "%{$search}%")
+                  ->orWhere('orgao_emissor', 'ilike', "%{$search}%")
+                  ->orWhere('descricao', 'ilike', "%{$search}%");
             });
         }
 

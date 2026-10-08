@@ -74,11 +74,11 @@ class NaoConformidadeController extends Controller
             ->when($request->filled('search'), function ($q) use ($request) {
                 $s = $request->input('search');
                 $q->where(function ($w) use ($s) {
-                    $w->where('codigo', 'like', "%{$s}%")
-                      ->orWhere('titulo', 'like', "%{$s}%")
-                      ->orWhere('descricao', 'like', "%{$s}%")
-                      ->orWhere('origem', 'like', "%{$s}%")
-                      ->orWhere('local_ocorrencia', 'like', "%{$s}%");
+                    $w->where('codigo', 'ilike', "%{$s}%")
+                      ->orWhere('titulo', 'ilike', "%{$s}%")
+                      ->orWhere('descricao', 'ilike', "%{$s}%")
+                      ->orWhere('origem', 'ilike', "%{$s}%")
+                      ->orWhere('local_ocorrencia', 'ilike', "%{$s}%");
                 });
             });
 

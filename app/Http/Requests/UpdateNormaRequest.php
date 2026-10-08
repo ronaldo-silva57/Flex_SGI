@@ -26,14 +26,11 @@ class UpdateNormaRequest extends FormRequest
         //Pega a norma sendo atualizada diretamente da Rota
         $norma = $this->route('norma');
         return [
-            'codigo'    => [
-                                'required',
-                                'string',
-                                'max:20',
+            'codigo'    => ['sometimes', 'string', 'max:20',
                                 // Ignora o ID da própria norma sendo editada
                                 Rule::unique('normas', 'codigo')->ignore($norma->id),
                             ],
-            'nome'      => ['required', 'string', 'max:255'],
+            'nome'      => ['sometimes', 'string', 'max:255'],
             'versao'    => ['nullable', 'string', 'max:20'],
             'descricao' => ['nullable', 'string'],
             'ativo'     => ['nullable', 'boolean'],

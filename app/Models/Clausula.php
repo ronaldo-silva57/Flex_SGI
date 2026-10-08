@@ -31,24 +31,18 @@ class Clausula extends Model
     ];
 
     /**
-     * Relacionamento com a Norma
+     * Relacionamentos
      */
     public function normas(): BelongsTo
     {
         return $this->belongsTo(Norma::class);
     }
 
-    /**
-     * Claúsula pai (para subcláusulas)
-     */
     public function pai(): BelongsTo
     {
         return $this->belongsTo(Clausula::class, 'clausula_pai_id');
     }
 
-    /**
-     * Subcláusulas (Filhos)
-     */
     public function filhos(): HasMany
     {
         return $this->hasMany(Clausula::class, 'clausula_pai_id')->orderBy('ordem');

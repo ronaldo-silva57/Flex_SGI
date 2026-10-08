@@ -23,15 +23,15 @@ class UpdateRegistroLegalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'       => ['required', 'exists:empresas,id'],
+            'empresa_id'       => ['sometimes', 'exists:empresas,id'],
             'norma_id'         => ['nullable','exists:normas,id'],
             'numero'           => ['nullable', 'string', 'max:100'],
             'orgao'            => ['nullable', 'string', 'max:255'],
-            'descricao'        => ['required', 'string'],
-            'tipo'             => ['required', 'in:Lei,Decreto,Normativa,Convênio,Resolução'],
+            'descricao'        => ['sometimes', 'string'],
+            'tipo'             => ['sometimes', 'in:Lei,Decreto,Normativa,Convênio,Resolução'],
             'data_publicacao'  => ['nullable', 'date'],
             'data_vigencia'    => ['nullable', 'date', 'after_or_equal:data_publicacao'],
-            'status'           => ['required', 'in:Vigente,Revogado,Em revisão'],
+            'status'           => ['sometimes', 'in:Vigente,Revogado,Em revisão'],
             'arquivo_path'     => ['nullable', 'string', 'max:500'],
         ];
     }

@@ -19,8 +19,8 @@ class TreinamentoUsuarioController extends Controller
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
-                $q->whereHas('treinamento', fn ($t) => $t->where('titulo', 'like', "%{$search}%"))
-                  ->orWhereHas('usuario', fn ($u) => $u->where('name', 'like', "%{$search}%"));
+                $q->whereHas('treinamento', fn ($t) => $t->where('titulo', 'ilike', "%{$search}%"))
+                  ->orWhereHas('usuario', fn ($u) => $u->where('name', 'ilike', "%{$search}%"));
             });
         }
 

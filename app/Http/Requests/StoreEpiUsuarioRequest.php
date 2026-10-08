@@ -23,13 +23,13 @@ class StoreEpiUsuarioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'epi_id'                => 'required|exists:epis,id',
-            'usuario_id'            => 'required|exists:users,id',
-            'data_entrega'          => 'nullable|date',
-            'data_vencimento'       => 'nullable|date|after_or_equal:data_entrega',
-            'quantidade'            => 'nullable|integer|min:1',
-            'responsavel_entrega_id'=> 'nullable|exists:users,id',
-            'status'                => 'required|in:Ativo,Vencido,Devolvido',
+            'epi_id'                => ['required', 'exists:epis,id'],
+            'usuario_id'            => ['required', 'exists:users,id'],
+            'data_entrega'          => ['nullable', 'date'],
+            'data_vencimento'       => ['nullable', 'date', 'after_or_equal:data_entrega'],
+            'quantidade'            => ['nullable', 'integer', 'min:1'],
+            'responsavel_entrega_id'=> ['nullable', 'exists:users,id'],
+            'status'                => ['required', 'in:Ativo,Vencido,Devolvido'],
         ];
     }
 

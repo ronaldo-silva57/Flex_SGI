@@ -24,7 +24,7 @@ class StoreMonitoramentoRequest extends FormRequest
     {
         return [
             'indicador_id'       => ['required', 'exists:indicadores,id'],
-            'responsavel_id'     => ['nullable','exists:users,id'],
+            'responsavel_id'     => ['nullable', 'exists:users,id'],
             'periodo_referencia' => ['required', 'string', 'max:20'],
             'valor_realizado'    => ['nullable', 'numeric', 'between:-99999999.99,99999999.99'],
             'valor_meta'         => ['nullable', 'numeric', 'between:-99999999.99,99999999.99'],

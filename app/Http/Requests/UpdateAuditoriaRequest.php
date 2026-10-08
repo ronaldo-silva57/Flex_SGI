@@ -23,15 +23,15 @@ class UpdateAuditoriaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'       => ['required', 'exists:empresas,id'],
+            'empresa_id'       => ['sometimes', 'exists:empresas,id'],
             'norma_id'         => ['nullable', 'exists:normas,id'],
             'auditor_lider_id' => ['nullable', 'exists:users,id'],
-            'tipo'             => ['required', 'in:Interna,Externa,Terceira parte'],
+            'tipo'             => ['sometimes', 'in:Interna,Externa,Terceira parte'],
             'escopo'           => ['nullable', 'string'],
             'objetivo'         => ['nullable', 'string'],
             'data_inicio'      => ['nullable', 'date'],
             'data_fim'         => ['nullable', 'date', 'after_or_equal:data_inicio'],
-            'status'           => ['required', 'in:Planejada,Em andamento,Concluída,Cancelada'],
+            'status'           => ['sometimes', 'in:Planejada,Em andamento,Concluída,Cancelada'],
             'relatorio'        => ['nullable', 'string'],
         ];
     }

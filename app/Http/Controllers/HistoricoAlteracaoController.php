@@ -42,7 +42,7 @@ class HistoricoAlteracaoController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('tabela', 'ilike', "%{$search}%")
-                  ->orWhere('registro_id', 'like', "%{$search}%");
+                  ->orWhere('registro_id', 'ilike', "%{$search}%");
             });
         }
 

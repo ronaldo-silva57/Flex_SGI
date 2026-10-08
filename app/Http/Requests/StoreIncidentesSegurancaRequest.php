@@ -23,16 +23,16 @@ class StoreIncidentesSegurancaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'        => ['required','exists:empresas,id'],
-            'ativo_id'          => ['nullable','exists:ativos_informacao,id'],
-            'responsavel_id'    => ['nullable','exists:users,id'],
-            'data_ocorrencia'   => ['required','date'],
-            'tipo'              => ['required','in:Acesso não autorizado,Malware,Vazamento Dados,Indisponibilidade,Phishing,Outros'],
-            'descricao'         => ['required','string'],
-            'impacto'           => ['nullable','string'],
-            'acao_imediata'     => ['nullable','string'],
-            'investigacao'      => ['nullable','string'],
-            'status'            => ['required','in:Aberto,Em investigação,Concluído'],
+            'empresa_id'        => ['required', 'exists:empresas,id'],
+            'ativo_id'          => ['nullable', 'exists:ativos_informacao,id'],
+            'responsavel_id'    => ['nullable', 'exists:users,id'],
+            'data_ocorrencia'   => ['required', 'date'],
+            'tipo'              => ['required', 'in:Acesso não autorizado,Malware,Vazamento Dados,Indisponibilidade,Phishing,Outros'],
+            'descricao'         => ['required', 'string'],
+            'impacto'           => ['nullable', 'string'],
+            'acao_imediata'     => ['nullable', 'string'],
+            'investigacao'      => ['nullable', 'string'],
+            'status'            => ['required', 'in:Aberto,Em investigação,Concluído'],
         ];
     }
 }

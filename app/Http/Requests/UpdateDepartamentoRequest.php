@@ -25,9 +25,7 @@ class UpdateDepartamentoRequest extends FormRequest
     {
         return [
             'empresa_id'     => ['sometimes', 'required', 'exists:empresas,id'],
-            'codigo'         => ['required', 
-                        'string', 
-                        'max:50',
+            'codigo'         => ['required', 'string', 'max:50',
                         Rule::unique('departamentos', 'codigo')->ignore($this->departamento->id),
                         ],   
             'nome'           => ['sometimes', 'required', 'string', 'max:255'],

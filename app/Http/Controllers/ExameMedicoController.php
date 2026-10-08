@@ -25,9 +25,9 @@ class ExameMedicoController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->whereHas('usuario', function ($u) use ($search) {
-                    $u->where('name', 'like', "%{$search}%");
-                })->orWhere('crm_medico', 'like', "%{$search}%")
-                  ->orWhere('medico_nome', 'like', "%{$search}%");
+                    $u->where('name', 'ilike', "%{$search}%");
+                })->orWhere('crm_medico', 'ilike', "%{$search}%")
+                  ->orWhere('medico_nome', 'ilike', "%{$search}%");
             });
         }
 

@@ -13,6 +13,8 @@ class Departamento extends Model
 {
     use HasFactory, SoftDeletes, Auditavel;
 
+    protected $table = 'departamentos';
+    
     protected $fillable = [
         'codigo',
         'empresa_id',

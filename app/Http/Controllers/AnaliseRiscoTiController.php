@@ -27,7 +27,11 @@ class AnaliseRiscoTiController extends Controller
      */
     public function create(): View
     {
-        return view('iso27001.analises_risco_ti.create');
+        $empresas = \App\Models\Empresa::pluck('razao_social', 'id');
+        $ativos = \App\Models\AtivoInformacao::pluck('nome', 'id');
+        $usuarios = \App\Models\User::pluck('name', 'id');
+
+        return view('iso27001.analises_risco_ti.create', compact('empresas', 'ativos', 'usuarios'));
     }
 
     /**
@@ -44,9 +48,10 @@ class AnaliseRiscoTiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(AnaliseRiscoTi $analisesRiscoTi): View
     {
-        //
+        $analisesRiscoTi->load(['empresa', 'ativo', 'responsavel']);
+        return view('iso27001.analises_risco_ti.show', compact('analisesRiscoTi'));
     }
 
     /**
@@ -54,7 +59,11 @@ class AnaliseRiscoTiController extends Controller
      */
     public function edit(AnaliseRiscoTi $analisesRiscoTi): View
     {
-        return view('iso27001.analises_risco_ti.edit', compact('analisesRiscoTi'));
+        $empresas = \App\Models\Empresa::pluck('razao_social', 'id');
+        $ativos = \App\Models\AtivoInformacao::pluck('nome', 'id');
+        $usuarios = \App\Models\User::pluck('name', 'id');
+
+        return view('iso27001.analises_risco_ti.edit', compact('analisesRiscoTi', 'empresas', 'ativos', 'usuarios'));
     }
 
     /**

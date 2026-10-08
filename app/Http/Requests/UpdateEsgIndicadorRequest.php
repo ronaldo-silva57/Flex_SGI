@@ -23,16 +23,16 @@ class UpdateEsgIndicadorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'     => ['required', 'exists:empresas,id'],
+            'empresa_id'     => ['sometimes', 'exists:empresas,id'],
             'responsavel_id' => ['nullable', 'exists:users,id'],
-            'dimensao'       => ['required', Rule::in(['Ambiental', 'Social', 'Governança'])],
-            'codigo'         => ['required', 'string', 'max:50'],
-            'nome'           => ['required', 'string', 'max:255'],
+            'dimensao'       => ['sometimes', Rule::in(['Ambiental', 'Social', 'Governança'])],
+            'codigo'         => ['sometimes', 'string', 'max:50'],
+            'nome'           => ['sometimes', 'string', 'max:255'],
             'descricao'      => ['nullable', 'string'],
             'formula'        => ['nullable', 'string'],
             'meta'           => ['nullable', 'numeric', 'between:-99999999.99,99999999.99'],
             'unidade_medida' => ['nullable', 'string', 'max:50'],
-            'frequencia'     => ['required', Rule::in(['Mensal', 'Trimestral', 'Semestral', 'Anual'])],
+            'frequencia'     => ['sometimes', Rule::in(['Mensal', 'Trimestral', 'Semestral', 'Anual'])],
             'referencia_gri' => ['nullable', 'string', 'max:50'],
             'ativo'          => ['nullable', 'boolean'],
         ];

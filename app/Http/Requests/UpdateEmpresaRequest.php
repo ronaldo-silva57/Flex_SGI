@@ -26,10 +26,11 @@ class UpdateEmpresaRequest extends FormRequest
         $empresaId = $this->route('empresa')?->id ?? $this->route('empresa');
 
         return [
-            'razao_social'  => ['required', 'string', 'max:255'],
-            'codigo'        => ['required', 'string', 'max:50'],
+            'razao_social'  => ['sometimes', 'string', 'max:255'],
+            'codigo'        => ['sometimes', 'string', 'max:50'],
             'nome_fantasia' => ['nullable', 'string', 'max:255'],
-            'cnpj'          => ['nullable', 'string', 'max:20', Rule::unique('empresas', 'cnpj')->ignore($empresaId)],
+            'cnpj'          => ['nullable', 'string', 'max:20', 
+                                Rule::unique('empresas', 'cnpj')->ignore($empresaId)],
             'ie'            => ['nullable', 'string', 'max:20'],
             'endereco'      => ['nullable', 'string'],
             'cidade'        => ['nullable', 'string', 'max:100'],

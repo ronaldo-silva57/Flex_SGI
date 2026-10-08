@@ -27,9 +27,9 @@ class ControleSegurancaController extends Controller
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
-                $q->where('titulo', 'ILIKE', "%{$search}%")
-                    ->orWhere('codigo_anexo_a', 'ILIKE', "%{$search}%")
-                    ->orWhere('descricao', 'ILIKE', "%{$search}%");
+                $q->where('titulo', 'ilike', "%{$search}%")
+                    ->orWhere('codigo_anexo_a', 'ilike', "%{$search}%")
+                    ->orWhere('descricao', 'ilike', "%{$search}%");
             });
         }
 

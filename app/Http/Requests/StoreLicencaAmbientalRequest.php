@@ -24,10 +24,6 @@ class StoreLicencaAmbientalRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
 
-    /**
-     * Regras de validação.
-     * Espelham exatamente os CHECKs da migration para garantir consistência.
-     */
     public function rules(): array
     {
         return [

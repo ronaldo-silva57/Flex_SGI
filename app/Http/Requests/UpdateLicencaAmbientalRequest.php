@@ -34,13 +34,13 @@ class UpdateLicencaAmbientalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'numero'         => ['required', 'string', 'max:100'],
-            'tipo'           => ['required', Rule::in(LicencaAmbiental::TIPOS)],
+            'numero'         => ['sometimes', 'string', 'max:100'],
+            'tipo'           => ['sometimes', Rule::in(LicencaAmbiental::TIPOS)],
             'orgao_emissor'  => ['required', 'string', 'max:255'],
             'descricao'      => ['nullable', 'string'],
             'condicionantes' => ['nullable', 'string'],
-            'data_emissao'   => ['required', 'date'],
-            'data_validade'  => ['required', 'date', 'after:data_emissao'],
+            'data_emissao'   => ['sometimes', 'date'],
+            'data_validade'  => ['sometimes', 'date', 'after:data_emissao'],
             'data_renovacao' => ['nullable', 'date'],
             'status'         => ['required', Rule::in([
                                     LicencaAmbiental::STATUS_VIGENTE,

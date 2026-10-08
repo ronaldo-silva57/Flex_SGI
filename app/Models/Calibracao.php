@@ -31,6 +31,9 @@ class Calibracao extends Model
         'data_validade'   => 'date',
     ];
 
+    /**
+     * Relacionamentos
+     */
     public function equipamento(): BelongsTo
     {
         return $this->belongsTo(EquipamentoMedicao::class);

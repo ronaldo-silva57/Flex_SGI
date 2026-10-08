@@ -23,10 +23,10 @@ class UpdateReuniaoGestaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'        => ['required', 'exists:empresas,id'],
+            'empresa_id'        => ['sometimes', 'exists:empresas,id'],
             'responsavel_id'    => ['nullable', 'exists:users,id'],
-            'data_reuniao'      => ['required', 'date'],
-            'tipo'              => ['required', 'in:Revisão Direção,Gestão Integrada,Outros'],
+            'data_reuniao'      => ['sometimes', 'date'],
+            'tipo'              => ['sometimes', 'in:Revisão Direção,Gestão Integrada,Outros'],
             'pauta'             => ['nullable', 'string'],
             'decisoes'          => ['nullable', 'string'],
             'acoes_definidas'   => ['nullable', 'string'],

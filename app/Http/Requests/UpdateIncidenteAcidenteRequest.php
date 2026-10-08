@@ -23,20 +23,20 @@ class UpdateIncidenteAcidenteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'        => 'required|exists:empresas,id',
-            'usuario_id'        => 'nullable|exists:users,id',
-            'responsavel_id'    => 'nullable|exists:users,id',
-            'data_ocorrencia'   => 'required|date',
-            'local'             => 'nullable|string|max:255',
-            'tipo'              => 'required|in:Quase acidente,Incidente,Acidente leve,Acidente grave,Fatal',
-            'descricao'         => 'required|string',
-            'causas'            => 'nullable|string',
-            'lesao'             => 'nullable|string',
-            'dias_perdidos'     => 'nullable|integer|min:0',
-            'tratamento'        => 'nullable|string',
-            'investigacao'      => 'nullable|string',
-            'acao_corretiva'    => 'nullable|string',
-            'status'            => 'required|in:Aberto,Em investigação,Concluído',
+            'empresa_id'        => ['sometimes', 'exists:empresas,id'],
+            'usuario_id'        => ['nullable', 'exists:users,id'],
+            'responsavel_id'    => ['nullable', 'exists:users,id'],
+            'data_ocorrencia'   => ['sometimes', 'date'],
+            'local'             => ['nullable', 'string', 'max:255'],
+            'tipo'              => ['sometimes', 'in:Quase acidente,Incidente,Acidente leve,Acidente grave,Fatal'],
+            'descricao'         => ['sometimes', 'string'],
+            'causas'            => ['nullable', 'string'],
+            'lesao'             => ['nullable', 'string'],
+            'dias_perdidos'     => ['nullable', 'integer', 'min:0'],
+            'tratamento'        => ['nullable', 'string'],
+            'investigacao'      => ['nullable', 'string'],
+            'acao_corretiva'    => ['nullable', 'string'],
+            'status'            => ['sometimes', 'in:Aberto,Em investigação,Concluído'],
         ];
     }
 }

@@ -25,10 +25,7 @@ class StoreClausulaRequest extends FormRequest
     {
         return [
             'norma_id'          => ['required', 'exists:normas,id'],
-            'codigo'            => [
-                'required',
-                'string',
-                'max:20',
+            'codigo'            => ['required', 'string', 'max:20',
                 Rule::unique('clausulas')->where(fn ($query) => 
                     $query->where('norma_id', $this->norma_id)
                 ),

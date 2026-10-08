@@ -13,9 +13,16 @@ return new class extends Migration
     {
         Schema::create('avaliacoes_fornecedores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
-            $table->foreignId('fornecedor_id')->constrained('fornecedores')->cascadeOnDelete();
-            $table->foreignId('avaliador_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->cascadeOnDelete();
+            $table->foreignId('fornecedor_id')
+                ->constrained('fornecedores')
+                ->cascadeOnDelete();
+            $table->foreignId('avaliador_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
             $table->string('periodo_referencia', 20); // Ex: 2026-Q3 ou 2026-09
             $table->decimal('nota_qualidade', 5, 2)->nullable()->comment('Nota de 0 a 100 ou 0 a 10');

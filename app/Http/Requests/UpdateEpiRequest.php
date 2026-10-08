@@ -23,15 +23,15 @@ class UpdateEpiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id'        => 'required|exists:empresas,id',
-            'nome'              => 'required|string|max:255',
-            'descricao'         => 'nullable|string',
-            'categoria'         => 'nullable|string|max:100',
-            'ca'                => 'nullable|string|max:50',
-            'validade_meses'    => 'nullable|integer|min:0',
-            'estoque_minimo'    => 'nullable|integer|min:0',
-            'estoque_atual'     => 'nullable|integer|min:0',
-            'ativo'             => 'boolean',
+            'empresa_id'        => ['sometimes', 'exists:empresas,id'],
+            'nome'              => ['sometimes', 'string', 'max:255'],
+            'descricao'         => ['nullable', 'string'],
+            'categoria'         => ['nullable', 'string', 'max:100'],
+            'ca'                => ['nullable', 'string', 'max:50'],
+            'validade_meses'    => ['nullable', 'integer', 'min:0'],
+            'estoque_minimo'    => ['nullable', 'integer', 'min:0'],
+            'estoque_atual'     => ['nullable', 'integer', 'min:0'],
+            'ativo'             => ['boolean'],
         ];
     }
 }

@@ -26,8 +26,8 @@ class UpdateFornecedorRequest extends FormRequest
         $fornecedorId = $this->route('fornecedor'); // ou $this->fornecedor
 
         return [
-            'codigo'              => ['required', 'string', 'max:50'],
-            'razao_social'        => ['required', 'string', 'max:255'],
+            'codigo'              => ['sometimes', 'string', 'max:50'],
+            'razao_social'        => ['sometimes', 'string', 'max:255'],
             'nome_fantasia'       => ['nullable', 'string', 'max:255'],
             'cnpj'                => [
                                         'nullable',

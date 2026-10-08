@@ -22,8 +22,8 @@ class EpiController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('nome', 'LIKE', "%{$search}%")
-                  ->orWhere('categoria', 'LIKE', "%{$search}%");
+                $q->where('nome', 'ilike', "%{$search}%")
+                  ->orWhere('categoria', 'ilike', "%{$search}%");
             });
         }
 

@@ -23,16 +23,16 @@ class StoreAtivosInformacaoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'empresa_id' => ['required','exists:empresas,id'],
-            'responsavel_id' => ['nullable','exists:users,id'],
-            'nome' => ['required','string','max:255'],
-            'descricao' => ['nullable','string'],
-            'tipo' => ['required','in:Hardware,Software,Dados,Servico,Pessoas,Instalações,Intangível'],
-            'localizacao' => ['nullable','string','max:255'],
-            'proprietario_id' => ['nullable','exists:users,id'],
-            'classificacao' => ['nullable','in:Público,Interno,Confidencial,Restrito'],
-            'valor' => ['nullable','numeric','min:0'],
-            'status' => ['required','in:Ativo,Inativo,Descartado'],
+            'empresa_id'        => ['required','exists:empresas,id'],
+            'responsavel_id'    => ['nullable','exists:users,id'],
+            'nome'              => ['required','string','max:255'],
+        'descricao'             => ['nullable','string'],
+            'tipo'              => ['required','in:Hardware,Software,Dados,Servico,Pessoas,Instalações,Intangível'],
+            'localizacao'       => ['nullable','string','max:255'],
+            'proprietario_id'   => ['nullable','exists:users,id'],
+            'classificacao'     => ['nullable','in:Público,Interno,Confidencial,Restrito'],
+            'valor'             => ['nullable','numeric','min:0'],
+            'status'            => ['required','in:Ativo,Inativo,Descartado'],
         ];
     }
 }

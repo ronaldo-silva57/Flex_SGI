@@ -28,11 +28,7 @@ class UpdateClausulaRequest extends FormRequest
 
         return [
             'norma_id'           => ['sometimes', 'required', 'exists:normas,id'],
-            'codigo'             => [
-                                        'sometimes',
-                                        'required',
-                                        'string',
-                                        'max:20',
+            'codigo'             => ['sometimes', 'required', 'string', 'max:20',
                                         // Verifica a unicidade da combinação (norma_id + codigo)
                                         Rule::unique('clausulas')->where(fn ($query) => 
                                             $query->where('norma_id', $normaId)
