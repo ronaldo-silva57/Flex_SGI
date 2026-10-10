@@ -58,6 +58,7 @@ use App\Http\Controllers\IshikawaCausaController;
 use App\Http\Controllers\RelatorioNaoConformidadeController;
 use App\Http\Controllers\GestaoResiduoController;
 use App\Http\Controllers\SoaControleController;
+use App\Http\Controllers\InventarioGeeController;
 
 use App\Http\Controllers\PesquisaSatisfacaoController;
 use App\Http\Controllers\PesquisaSatisfacaoRespostaController;
@@ -177,7 +178,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::resource('gestao_residuos', GestaoResiduoController::class);
     Route::resource('objetivos_ambientais', ObjetivoAmbientalController::class);
-
+    Route::resource('inventario_gee', InventarioGeeController::class);
 
     Route::prefix('produtos_quimicos')->name('produtos_quimicos.')->group(function () {
         Route::get('{produtoQuimico}/fispq/download', [ProdutoQuimicoController::class, 'downloadFispq'])

@@ -20,7 +20,10 @@
                                 ['nome' => 'Monitoramento ESG', 'icone' => 'fa-eye', 'cor' => 'bg-teal-700', 'rota' => route('esg_monitoramentos.index')],
                                 ['nome' => 'Stakeholders', 'icone' => 'fa-handshake', 'cor' => 'bg-indigo-700', 'rota' => route('stakeholders.index')],
                                 ['nome' => 'Materialidade', 'icone' => 'fa-layer-group', 'cor' => 'bg-purple-700', 'rota' => route('materialidade.index')],
-                                ['nome' => 'Vínculos Normativos', 'icone' => 'fa-link', 'cor' => 'bg-slate-800', 'rota' => route('vinculos_normativos.index')],        
+                                ['nome' => 'Vínculos Normativos', 'icone' => 'fa-link', 'cor' => 'bg-slate-800', 'rota' => route('vinculos_normativos.index')],  
+                                ['nome' => 'Inventario GEE', 'icone' => 'fa-link', 'cor' => 'bg-slate-800', 'rota' => route('inventario_gee.index')],  
+                                
+                                
                             ];
                         @endphp
 

@@ -88,6 +88,8 @@ class DatabaseSeeder extends Seeder
             AnaliseRiscoTiSeeder::class,
 
             SoaControleSeeder::class,
+
+            InventarioGeeSeeder::class,
         ]);
     }
 }
