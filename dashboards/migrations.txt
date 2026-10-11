@@ -1,0 +1,793 @@
+=== NOME DO ARQUIVO: 0001_01_01_000001_create_departamentos_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('departamentos', function (Blueprint $table) {
+            $table->id();
+            $table->string('codigo', 50)->nullable();
+            $table->foreignId('empresa_id')
+                ->nullable()
+                ->constrained('empresas')
+                ->nullOnDelete();
+            $table->string('nome');
+            $table->text('descricao')->nullable();
+            $table->unsignedBigInteger('responsavel_id')->nullable();
+            $table->boolean('ativo')->default(true);
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index('empresa_id');
+            $table->index('responsavel_id');
+            $table->index(['empresa_id', 'ativo']);
+            $table->index('deleted_at');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('departamentos');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_082000_create_clientes_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('clientes', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->restrictOnDelete();
+            
+            $table->enum('tipo_documento', ['cpf', 'cnpj'])->nullable(); 
+            $table->string('documento', 20)->nullable(); 
+            $table->string('nome'); 
+            $table->string('razao_social')->nullable(); 
+            $table->string('contato_principal')->nullable(); 
+            $table->string('email')->nullable();
+            $table->string('telefone', 25)->nullable();
+            $table->string('cidade', 100)->nullable();
+            $table->char('estado', 2)->nullable();
+            $table->text('endereco_completo')->nullable();
+            $table->enum('status', ['ativo', 'inativo', 'bloqueado_sgi'])->default('ativo'); 
+            $table->text('observacoes_compliance')->nullable();     
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index(['empresa_id', 'status']);
+            $table->unique(['empresa_id', 'tipo_documento', 'documento'], 'uid_empresa_documento'); 
+            $table->index(['cidade', 'estado']); 
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('clientes');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_082220_create_fornecedores_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('fornecedores', function (Blueprint $table) {
+            $table->id();
+            $table->string('codigo', 50);
+            $table->string('razao_social');
+            $table->string('nome_fantasia')->nullable();
+            $table->string('cnpj', 20)->nullable();
+            $table->string('contato_nome')->nullable();
+            $table->string('contato_email')->nullable();
+            $table->string('contato_telefone', 20)->nullable();
+            $table->text('endereco')->nullable();
+            $table->string('categoria', 100)->nullable();
+            $table->tinyInteger('avaliacao_risco')->nullable()->check('avaliacao_risco BETWEEN 1 AND 5');
+            $table->boolean('ativo')->default(true);
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index('cnpj');
+            $table->index('ativo');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('fornecedores');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_091054_create_riscos_oportunidades_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('riscos_oportunidades', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->restrictOnDelete();
+            $table->foreignId('processo_id')
+                ->nullable()
+                ->constrained('processos')
+                ->nullOnDelete();
+            $table->foreignId('responsavel_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->enum('tipo', ['Risco', 'Oportunidade']);
+            $table->text('descricao');
+            $table->text('causa')->nullable();
+            $table->text('consequencia')->nullable();
+            $table->tinyInteger('probabilidade')->nullable();
+            $table->tinyInteger('impacto')->nullable();
+            $table->integer('nivel_risco')->nullable()->storedAs('probabilidade * impacto');
+            $table->enum('tratamento', ['Eliminar', 'Mitigar', 'Transferir', 'Aceitar'])->nullable();
+            $table->text('plano_acao')->nullable();
+            $table->date('prazo')->nullable();
+            $table->enum('status', ['Aberto', 'Em andamento', 'Concluído', 'Cancelado'])->default('Aberto');
+            $table->text('evidencia')->nullable();
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index(['empresa_id', 'processo_id']);
+            $table->index('responsavel_id');
+            $table->index('status');
+        });
+
+    /**
+     * Constraints CHECK via SQL puro
+     */    
+    DB::statement('ALTER TABLE riscos_oportunidades ADD CONSTRAINT check_probabilidade CHECK (probabilidade BETWEEN 1 AND 5)');
+    DB::statement('ALTER TABLE riscos_oportunidades ADD CONSTRAINT check_impacto CHECK (impacto BETWEEN 1 AND 5)');       
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('riscos_oportunidades');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_100602_create_nao_conformidades_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('nao_conformidades', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->restrictOnDelete();
+                $table->foreignId('cliente_id')
+                ->nullable()
+                ->constrained('clientes')
+                ->nullOnDelete();
+            $table->foreignId('norma_id')
+                ->nullable()
+                ->constrained('normas')
+                ->nullOnDelete();
+            $table->foreignId('clausula_id')
+                ->nullable()
+                ->constrained('clausulas')
+                ->nullOnDelete();
+            $table->foreignId('processo_id')
+                ->nullable()
+                ->constrained('processos')
+                ->nullOnDelete();
+            $table->foreignId('responsavel_apuracao_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->foreignId('responsavel_tratamento_id')
+                ->constrained('users')
+                ->nullOnDelete();
+
+            //Identificador amigável, por exemplo: NC-2026-0001
+            $table->string('codigo', 40);
+            $table->string('titulo', 255);
+
+            $table->string('tipo', 40)->default('Não Conformidade');
+            $table->enum('origem', ['Auditoria', 'Monitoramento', 'Reclamacao', 'Incidente', 'Outros']);
+            $table->string('local_ocorrencia', 255)->nullable();
+
+            $table->text('descricao');
+            $table->text('requisito_nao_atendido')->nullable();
+            $table->text('evidencia_inicial')->nullable();
+            $table->enum('gravidade', ['Baixa', 'Media', 'Alta', 'Crítica'])->nullable();
+
+            $table->string('probabilidade', 20)->nullable();
+            $table->string('prioridade', 20)->nullable();
+            $table->boolean('recorrente')->default(false);
+
+            $table->enum('status', ['Aberta', 'Em analise', 'Em ação', 'Verificação', 'Fechada'])->default('Aberta');
+
+            $table->date('data_identificacao')->nullable();
+            $table->date('data_abertura')->useCurrent();
+            $table->date('prazo_tratamento')->nullable();
+            $table->date('data_analise')->nullable();
+            $table->date('data_verificacao')->nullable();
+            $table->date('data_encerramento')->nullable();
+
+            $table->text('justificativa_encerramento')->nullable();
+
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            //O código é único da empresa, não globalmente
+            $table->unique(['empresa_id', 'codigo']);
+
+            $table->index(['empresa_id', 'status']);
+            $table->index(['empresa_id', 'origem']);
+            $table->index(['empresa_id', 'gravidade']);
+            $table->index(['empresa_id', 'prioridade']);
+            $table->index('cliente_id');
+            $table->index('norma_id');
+            $table->index('clausula_id');
+            $table->index('processo_id');
+            $table->index('prazo_tratamento');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('nao_conformidades');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_101139_create_auditorias_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('auditorias', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->cascadeOnDelete();
+            $table->foreignId('norma_id')
+                ->nullable()
+                ->constrained('normas')
+                ->nullOnDelete();
+            $table->foreignId('auditor_lider_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->enum('tipo', ['Interna', 'Externa', 'Terceira parte']);
+            $table->text('escopo')->nullable();
+            $table->text('objetivo')->nullable();
+            $table->date('data_inicio')->nullable();
+            $table->date('data_fim')->nullable();
+            $table->enum('status', ['Planejada', 'Em andamento', 'Concluída', 'Cancelada'])->default('Planejada');
+            $table->text('relatorio')->nullable();
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index('empresa_id');
+            $table->index('norma_id');
+            $table->index('auditor_lider_id');
+            $table->index('status');
+            $table->index('tipo');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('auditorias');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_102822_create_auditorias_itens_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('auditorias_itens', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('auditoria_id')
+                ->constrained('auditorias')
+                ->cascadeOnDelete();
+            $table->foreignId('clausula_id')
+                ->nullable()
+                ->constrained('clausulas')
+                ->nullOnDelete();
+            $table->foreignId('processo_id')
+                ->nullable()
+                ->constrained('processos')
+                ->nullOnDelete();
+            $table->foreignId('auditor_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->text('descricao_verificacao');
+            $table->text('evidencia_coletada')->nullable();
+            $table->enum('conformidade', ['conforme', 'nao_conforme', 'oportunidade_melhoria', 'nao_aplicavel'])->nullable();
+            $table->text('observacoes')->nullable();
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index('auditoria_id');
+            $table->index('clausula_id');
+            $table->index('processo_id');
+            $table->index('auditor_id');
+            $table->index('conformidade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('auditorias_itens');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_103213_create_documentos_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('documentos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->cascadeOnDelete();
+            $table->foreignId('processo_id')
+                ->nullable()
+                ->constrained('processos')
+                ->nullOnDelete();
+            $table->foreignId('norma_id')
+                ->nullable()
+                ->constrained('normas')
+                ->nullOnDelete();
+            $table->foreignId('responsavel_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->string('codigo', 50);
+            $table->string('titulo');
+            $table->enum('tipo', ['Política', 'Procedimento', 'Instrução', 'Registro', 'Formulário', 'Manual', 'Outro']);
+            $table->string('versao', 10)->default('1.0');
+            $table->text('conteudo')->nullable();
+            $table->string('arquivo_path', 500)->nullable();
+            $table->enum('status', ['Rascunho', 'Em revisão', 'Aprovado', 'Obsoleto'])->default('Rascunho');
+            $table->date('data_aprovacao')->nullable();
+            $table->date('data_revisao')->nullable();
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index('empresa_id');
+            $table->index('processo_id');
+            $table->index('norma_id');
+            $table->index('responsavel_id');
+            $table->index('codigo');
+            $table->index('status');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('documentos');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_103448_create_treinamentos_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('treinamentos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->cascadeOnDelete();
+            $table->foreignId('responsavel_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            $table->string('titulo');
+            $table->text('descricao')->nullable();
+            $table->text('conteudo')->nullable();
+            $table->integer('carga_horaria')->nullable();
+            $table->enum('tipo', ['Obrigatório', 'Recomendado', 'Capacitação']);
+            $table->integer('validade_meses')->nullable();
+            $table->enum('status', ['Ativo', 'Inativo'])->default('Ativo');
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index('empresa_id');
+            $table->index('responsavel_id');
+            $table->index('status');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('treinamentos');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_08_16_103628_create_treinamentos_usuarios_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('treinamentos_usuarios', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('treinamento_id')
+                ->constrained('treinamentos')
+                ->cascadeOnDelete();
+            $table->foreignId('usuario_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+            $table->date('data_conclusao')->nullable();
+            $table->date('validade_ate')->nullable();
+            $table->decimal('nota', 5, 2)->nullable();
+            $table->string('certificado_path', 500)->nullable();
+            $table->enum('status', ['Pendente', 'Em andamento', 'Concluído', 'Vencido'])->default('Pendente');
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index('treinamento_id');
+            $table->index('usuario_id');
+            $table->index('status');
+            $table->index('data_conclusao');
+            $table->index(['validade_ate', 'status']);
+
+            $table->unique(['treinamento_id', 'usuario_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('treinamentos_usuarios');
+    }
+};
+
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_09_28_101524_create_planos_acao_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('planos_acao', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->cascadeOnDelete();
+
+            $table->foreignId('responsavel_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+            
+            // Relacionamento Polimórfico (Origem da ação: RNC, Risco, Auditoria, Reunião, etc.)
+            $table->nullableMorphs('origem');
+
+            $table->string('codigo', 50)->nullable();
+            $table->string('titulo');
+            
+            // Metodologia 5W2H
+            $table->text('o_que')->comment('What: O que será feito');
+            $table->text('por_que')->nullable()->comment('Why: Por que será feito');
+            $table->text('onde')->nullable()->comment('Where: Onde será executado');
+            $table->text('como')->nullable()->comment('How: Como será feito');
+            $table->decimal('quanto_custa', 12, 2)->default(0.00)->comment('How much: Custo estimado');
+            
+            $table->date('prazo_inicio')->nullable();
+            $table->date('prazo_fim')->nullable();
+            $table->date('data_conclusao')->nullable();
+            
+            $table->unsignedTinyInteger('progresso')->default(0); // 0 a 100%
+            $table->enum('status', ['Pendente', 'Em andamento', 'Em verificação', 'Concluído', 'Cancelado'])->default('Pendente');
+            $table->boolean('eficaz')->nullable();
+            $table->text('evidencia_conclusao')->nullable();
+            $table->text('observacoes')->nullable();
+
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index(['empresa_id', 'status']);
+            $table->index('prazo_fim');
+            $table->index('responsavel_id');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('planos_acao');
+    }
+};
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_09_28_101726_create_mudancas_gestao_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('mudancas_gestao', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete();
+            $table->foreignId('solicitante_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('responsavel_aprovacao_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('processo_id')->nullable()->constrained('processos')->nullOnDelete();
+
+            $table->string('codigo', 50);
+            $table->string('titulo');
+            $table->enum('tipo', ['Processo', 'Equipamento', 'Layout', 'Documento', 'Pessoas/Estrutura', 'Sistema/IT', 'Outros']);
+            $table->text('descricao_mudanca');
+            $table->text('justificativa');
+            
+            // Avaliações de Impacto do SGI
+            $table->text('impacto_qualidade')->nullable();
+            $table->text('impacto_ambiental')->nullable();
+            $table->text('impacto_sso')->nullable();
+            $table->text('impacto_seguranca_informacao')->nullable();
+
+            $table->date('data_prevista');
+            $table->date('data_implementacao')->nullable();
+            $table->enum('status', ['Proposta', 'Em analise', 'Aprovada', 'Rejeitada', 'Em implementação', 'Concluída', 'Cancelada'])->default('Proposta');
+            $table->text('parecer_aprovacao')->nullable();
+
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->unique(['empresa_id', 'codigo']);
+            $table->index(['empresa_id', 'status']);
+            $table->index('solicitante_id');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('mudancas_gestao');
+    }
+};
+
+========================================
+
+=== NOME DO ARQUIVO: 2026_09_28_101754_create_avaliacoes_fornecedores_table.php ===
+
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('avaliacoes_fornecedores', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('empresa_id')
+                ->constrained('empresas')
+                ->cascadeOnDelete();
+            $table->foreignId('fornecedor_id')
+                ->constrained('fornecedores')
+                ->cascadeOnDelete();
+            $table->foreignId('avaliador_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            $table->string('periodo_referencia', 20); // Ex: 2026-Q3 ou 2026-09
+            $table->decimal('nota_qualidade', 5, 2)->nullable()->comment('Nota de 0 a 100 ou 0 a 10');
+            $table->decimal('nota_prazo', 5, 2)->nullable();
+            $table->decimal('nota_atendimento', 5, 2)->nullable();
+            $table->decimal('nota_esg_ambiental', 5, 2)->nullable();
+            $table->decimal('nota_final', 5, 2)->nullable();
+
+            $table->enum('status_qualificacao', ['Aprovado', 'Aprovado com Restrição', 'Reprovado', 'Em observação'])->default('Aprovado');
+            $table->text('observacoes')->nullable();
+            $table->text('plano_acao_exigido')->nullable();
+
+            $table->timestampsTz();
+            $table->softDeletes();
+
+            $table->index(['empresa_id', 'fornecedor_id']);
+            $table->index('status_qualificacao');
+            $table->index('periodo_referencia');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('avaliacoes_fornecedores');
+    }
+};
+
+========================================
+

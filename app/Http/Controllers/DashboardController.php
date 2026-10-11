@@ -2,126 +2,197 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
+use App\Models\AnaliseRiscoTi;
+use App\Models\AspectoAmbiental;
+use App\Models\EquipamentoMedicao;
+use App\Models\IncidenteAcidente;
+use App\Models\IncidenteSeguranca;
+use App\Models\LicencaAmbiental;
+use App\Models\MudancaGestao;
+use App\Models\NaoConformidade;
+use App\Models\NaoConformidadeAmbiental;
+use App\Models\PerigoRisco;
+use App\Models\PlanoAcao;
+use App\Models\ReuniaoGestao;
+use App\Models\RiscoOportunidade;
+use App\Models\SoaControle;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public const FAIXAS = ['Vencido', '7 dias', '30 dias', '60 dias', '90 dias'];
-
-    public function index(Request $request): View
+    public function index()
     {
-        $empresaId = auth()->user()->empresa_id ?? 1;
+        $hoje = Carbon::today();
 
-        $kpis = DB::table('vw_kpis_executivos')
-            ->where('empresa_id', $empresaId)
-            ->first();
+        // ============ SAÚDE POR ISO ============
+        $saude = [
+            'iso9001' => $this->saude9001(),
+            'iso14001' => $this->saude14001(),
+            'iso45001' => $this->saude45001(),
+            'iso27001' => $this->saude27001(),
+        ];
 
-        $vencimentos = DB::table('vw_agenda_vencimentos')
-            ->select('modulo', DB::raw("
-                CASE
-                    WHEN dias_restantes < 0 THEN 'Vencido'
-                    WHEN dias_restantes <= 7 THEN '7 dias'
-                    WHEN dias_restantes <= 30 THEN '30 dias'
-                    WHEN dias_restantes <= 60 THEN '60 dias'
-                    WHEN dias_restantes <= 90 THEN '90 dias'
-                    ELSE 'Futuro'
-                END AS faixa
-            "), DB::raw('COUNT(*) as total'))
-            ->where('empresa_id', $empresaId)
-            ->where('dias_restantes', '<=', 90)
-            ->groupBy('modulo', 'faixa')
-            ->orderBy('modulo')
-            ->get();
+        // ============ RISCOS CONSOLIDADOS (scatter) ============
+        // Formato unificado: probabilidade × impacto, com categoria (norma)
+        $riscos = [];
 
-        $ncGravidade = DB::table('nao_conformidades')
-            ->select('gravidade', DB::raw('COUNT(*) as total'))
-            ->where('empresa_id', $empresaId)
-            ->whereNull('deleted_at')
-            ->groupBy('gravidade')
-            ->get();
+        RiscoOportunidade::where('tipo', 'Risco')
+            ->whereNotNull('probabilidade')->whereNotNull('impacto')
+            ->get(['probabilidade', 'impacto'])
+            ->each(fn($r) => $riscos[] = [
+                'x' => $r->probabilidade, 'y' => $r->impacto, 'norma' => 'SIG',
+            ]);
 
-        $ncStatus = DB::table('nao_conformidades')
+        PerigoRisco::where('status', 'Ativo')
+            ->whereNotNull('probabilidade')->whereNotNull('severidade')
+            ->get(['probabilidade', 'severidade'])
+            ->each(fn($r) => $riscos[] = [
+                'x' => $r->probabilidade, 'y' => $r->severidade, 'norma' => '45001',
+            ]);
+
+        AnaliseRiscoTi::whereNotNull('probabilidade')->whereNotNull('impacto')
+            ->get(['probabilidade', 'impacto'])
+            ->each(fn($r) => $riscos[] = [
+                'x' => $r->probabilidade, 'y' => $r->impacto, 'norma' => '27001',
+            ]);
+
+        AspectoAmbiental::where('status', 'ativo')
+            ->whereNotNull('significancia')
+            ->get(['significancia'])
+            ->each(fn($r) => $riscos[] = [
+                'x' => 3, 'y' => $r->significancia, 'norma' => '14001',
+            ]);
+
+        // ============ ALERTAS CONSOLIDADOS ============
+        $alertas = [
+            // Qualidade
+            ['iso' => '9001', 'label' => 'NCs abertas',          'valor' => NaoConformidade::whereNotIn('status', ['Fechada'])->count(),                                    'rota' => route('nao_conformidades.index'),           'cor' => 'red'],
+            ['iso' => '9001', 'label' => 'Calibrações vencidas',  'valor' => EquipamentoMedicao::where('status', 'Ativo')->whereDate('proxima_calibracao', '<', $hoje)->count(), 'rota' => route('equipamentos_medicao.index'),        'cor' => 'red'],
+            // Ambiental
+            ['iso' => '14001', 'label' => 'Licenças vencidas',    'valor' => LicencaAmbiental::where('status', 'Vigente')->whereDate('data_validade', '<', $hoje)->count(),     'rota' => route('licencas_ambientais.index'),         'cor' => 'red'],
+            ['iso' => '14001', 'label' => 'NCs ambientais',       'valor' => NaoConformidadeAmbiental::whereNotIn('status', ['Fechada'])->count(),                             'rota' => route('nao_conformidades_ambientais.index'),'cor' => 'red'],
+            // SST
+            ['iso' => '45001', 'label' => 'Incidentes abertos',   'valor' => IncidenteAcidente::whereIn('status', ['Aberto', 'Em investigação'])->count(),                     'rota' => route('incidentes_acidentes.index'),        'cor' => 'red'],
+            ['iso' => '45001', 'label' => 'Perigos alto risco',   'valor' => PerigoRisco::where('status', 'Ativo')->where('nivel_risco', '>=', 15)->count(),                   'rota' => route('perigos_riscos.index'),              'cor' => 'amber'],
+            // Segurança info
+            ['iso' => '27001', 'label' => 'Incidentes SGSI',      'valor' => IncidenteSeguranca::whereIn('status', ['Aberto', 'Em investigação'])->count(),                    'rota' => route('incidentes_seguranca.index'),        'cor' => 'red'],
+            ['iso' => '27001', 'label' => 'Riscos residual alto', 'valor' => AnaliseRiscoTi::where('nivel_risco_residual', '>=', 15)->count(),                                 'rota' => route('analises_risco_ti.index'),           'cor' => 'amber'],
+            // Transversal
+            ['iso' => 'SIG',  'label' => 'Planos atrasados',      'valor' => PlanoAcao::whereIn('status', ['Pendente', 'Em andamento'])->whereNotNull('prazo_fim')->whereDate('prazo_fim', '<', $hoje)->count(), 'rota' => route('planos_acao.index'), 'cor' => 'red'],
+            ['iso' => 'SIG',  'label' => 'Mudanças pendentes',    'valor' => MudancaGestao::whereIn('status', ['Proposta', 'Em analise'])->count(),                            'rota' => route('mudancas_gestao.index'),             'cor' => 'amber'],
+        ];
+
+        // ============ PLANOS DE AÇÃO POR NORMA DE ORIGEM (morph) ============
+        $planosPorOrigem = PlanoAcao::select('origem_type', DB::raw('COUNT(*) as total'))
+            ->groupBy('origem_type')->pluck('total', 'origem_type')
+            ->mapWithKeys(fn($v, $k) => [class_basename($k) => $v]);
+
+        // ============ AUDITORIAS ============
+        $auditoriasStatus = DB::table('auditorias')
             ->select('status', DB::raw('COUNT(*) as total'))
-            ->where('empresa_id', $empresaId)
-            ->whereNull('deleted_at')
-            ->groupBy('status')
-            ->get();
+            ->groupBy('status')->pluck('total', 'status');
 
-        $acoes = DB::table('acoes_corretivas as ac')
-            ->join('nao_conformidades as nc', 'nc.id', '=', 'ac.nao_conformidade_id')
-            ->select('ac.etapa', 'ac.status', DB::raw('COUNT(*) as total'))
-            ->where('nc.empresa_id', $empresaId)
-            ->whereNull('ac.deleted_at')
-            ->groupBy('ac.etapa', 'ac.status')
-            ->get();
+        // ============ ÚLTIMA REVISÃO PELA DIREÇÃO ============
+        $ultimaRevisao = ReuniaoGestao::where('tipo', 'Revisão Direção')
+            ->orderByDesc('data_reuniao')->first();
 
-        $indicadores = DB::table('monitoramentos as m')
-            ->join('indicadores as i', 'i.id', '=', 'm.indicador_id')
-            ->select(
-                'i.codigo', 'i.nome', 'm.periodo_referencia',
-                'm.valor_realizado',
-                DB::raw('COALESCE(m.valor_meta, i.meta) as meta'),
-                'i.tipo_meta', 'i.unidade_medida'
-            )
-            ->where('i.empresa_id', $empresaId)
-            ->whereNull('m.deleted_at')
-            ->orderByDesc('m.created_at')
-            ->limit(20)
-            ->get();
+        // ============ PLANOS DE AÇÃO CRÍTICOS (Top 5) ============
+        $planosCriticos = PlanoAcao::with('responsavel')
+            ->whereIn('status', ['Pendente', 'Em andamento'])
+            ->whereNotNull('prazo_fim')
+            ->orderBy('prazo_fim')->limit(5)
+            ->get(['id', 'codigo', 'titulo', 'progresso', 'prazo_fim', 'status', 'responsavel_id', 'origem_type']);
 
-        // ESG removido — sem gráfico correspondente no Blade.
-        // Reative quando adicionar o card.
-
-        $matrizRisco = DB::table('riscos_oportunidades')
-            ->select('probabilidade', 'impacto', DB::raw('COUNT(*) as total'))
-            ->where('empresa_id', $empresaId)
-            ->whereNull('deleted_at')
-            ->where('tipo', 'Risco')
-            ->groupBy('probabilidade', 'impacto')
-            ->get();
-
-        $incidentes = DB::table('incidentes_acidentes')
-            ->select(
-                DB::raw("TO_CHAR(data_ocorrencia, 'YYYY-MM') as mes"),
-                DB::raw('COUNT(*) as total'),
-                DB::raw('SUM(dias_perdidos) as dias_perdidos')
-            )
-            ->where('empresa_id', $empresaId)
-            ->whereNull('deleted_at')
-            ->where('data_ocorrencia', '>=', Carbon::now()->subMonths(12)->startOfMonth())
-            ->groupByRaw("TO_CHAR(data_ocorrencia, 'YYYY-MM')")
-            ->orderByRaw("TO_CHAR(data_ocorrencia, 'YYYY-MM')")
-            ->get();
-
-        $auditorias = DB::table('auditorias')
-            ->select('status', DB::raw('COUNT(*) as total'))
-            ->where('empresa_id', $empresaId)
-            ->whereNull('deleted_at')
-            ->groupBy('status')
-            ->get();
-
-        $proximosVencimentos = DB::table('vw_agenda_vencimentos')
-            ->where('empresa_id', $empresaId)
-            ->whereBetween('dias_restantes', [-365, 30])
-            ->orderBy('dias_restantes')
-            ->limit(15)
-            ->get();
-
-        return view('cadastros.dashboard.index', compact(
-            'kpis',
-            'vencimentos',
-            'ncGravidade',
-            'ncStatus',
-            'acoes',
-            'indicadores',
-            'matrizRisco',
-            'incidentes',
-            'auditorias',
-            'proximosVencimentos',
-            'empresaId'
+        return view('cadastros.dashboard', compact(
+            'saude', 'riscos', 'alertas', 'planosPorOrigem',
+            'auditoriasStatus', 'ultimaRevisao', 'planosCriticos'
         ));
+    }
+
+    private function saude9001(): array
+    {
+        $total    = NaoConformidade::count();
+        $fechadas = NaoConformidade::where('status', 'Fechada')->count();
+        $pct      = $total > 0 ? round(($fechadas / $total) * 100) : 100;
+
+        return [
+            'nome'    => 'ISO 9001',
+            'subtitulo' => 'Qualidade',
+            'pct'     => $pct,
+            'cor'     => $pct >= 80 ? 'emerald' : ($pct >= 60 ? 'amber' : 'red'),
+            'detalhes' => [
+                'NCs fechadas'   => "$fechadas / $total",
+                'NCs abertas'    => NaoConformidade::whereNotIn('status', ['Fechada'])->count(),
+                'Calibrações venc.' => EquipamentoMedicao::where('status', 'Ativo')
+                    ->whereDate('proxima_calibracao', '<', now())->count(),
+            ],
+            'rota' => route('iso9001.analytics'),
+        ];
+    }
+
+    private function saude14001(): array
+    {
+        $total    = NaoConformidadeAmbiental::count();
+        $fechadas = NaoConformidadeAmbiental::where('status', 'Fechada')->count();
+        $pct      = $total > 0 ? round(($fechadas / $total) * 100) : 100;
+
+        return [
+            'nome'    => 'ISO 14001',
+            'subtitulo' => 'Ambiental',
+            'pct'     => $pct,
+            'cor'     => $pct >= 80 ? 'emerald' : ($pct >= 60 ? 'amber' : 'red'),
+            'detalhes' => [
+                'NCs fechadas'     => "$fechadas / $total",
+                'Licenças vigentes' => LicencaAmbiental::where('status', 'Vigente')->count(),
+                'Licenças a vencer' => LicencaAmbiental::where('status', 'Vigente')
+                    ->whereBetween('data_validade', [now(), now()->addDays(60)])->count(),
+            ],
+            'rota' => route('iso14001.analytics'),
+        ];
+    }
+
+    private function saude45001(): array
+    {
+        $ultimo = IncidenteAcidente::whereIn('tipo', ['Acidente leve', 'Acidente grave', 'Fatal'])
+            ->orderByDesc('data_ocorrencia')->first();
+        $dias   = $ultimo ? Carbon::parse($ultimo->data_ocorrencia)->diffInDays(now()) : null;
+
+        $pct = $dias === null ? 100 : ($dias >= 90 ? 100 : ($dias >= 30 ? 75 : 50));
+
+        return [
+            'nome'    => 'ISO 45001',
+            'subtitulo' => 'SST',
+            'pct'     => $pct,
+            'cor'     => $pct >= 80 ? 'emerald' : ($pct >= 60 ? 'amber' : 'red'),
+            'detalhes' => [
+                'Dias sem acidente' => $dias ?? '—',
+                'Incidentes abertos'=> IncidenteAcidente::whereIn('status', ['Aberto', 'Em investigação'])->count(),
+                'Perigos alto risco'=> PerigoRisco::where('status', 'Ativo')->where('nivel_risco', '>=', 15)->count(),
+            ],
+            'rota' => route('iso45001.analytics'),
+        ];
+    }
+
+    private function saude27001(): array
+    {
+        $aplicaveis = SoaControle::where('aplicavel', true)->count();
+        $impl       = SoaControle::where('aplicavel', true)
+            ->where('status_implementacao', 'Implementado')->count();
+        $pct        = $aplicaveis > 0 ? round(($impl / $aplicaveis) * 100) : 0;
+
+        return [
+            'nome'    => 'ISO 27001',
+            'subtitulo' => 'Segurança da Informação',
+            'pct'     => $pct,
+            'cor'     => $pct >= 80 ? 'emerald' : ($pct >= 50 ? 'amber' : 'red'),
+            'detalhes' => [
+                'Controles implementados' => "$impl / $aplicaveis",
+                'Riscos resid. alto'      => AnaliseRiscoTi::where('nivel_risco_residual', '>=', 15)->count(),
+                'Incidentes abertos'      => IncidenteSeguranca::whereIn('status', ['Aberto', 'Em investigação'])->count(),
+            ],
+            'rota' => route('iso27001.analytics'),
+        ];
     }
 }

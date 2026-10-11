@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('ISO 14001') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('ISO 14001') }}
+            </h2>
+            <a href="{{ route('iso14001.analytics') }}"
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                <i class="fas fa-chart-line"></i> Painel de Indicadores
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -13,7 +19,7 @@
                         <h3 class="text-lg font-medium">ISO 14001</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <!--<div class="grid grid-cols-4 gap-4">-->
+                    {{-- Grid módulos ISO 14001 --}}
                         @php
                             $cadastrosModulos = [
                                 ['nome' => 'Aspectos Ambientais', 'icone' => 'fa-leaf', 'cor' => 'bg-green-600', 'rota' => route('aspectos_ambientais.index')],

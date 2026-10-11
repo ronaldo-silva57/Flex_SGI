@@ -37,7 +37,7 @@ return [
             'justificativa_inclusao'    => ['nullable','string','required_if:aplicavel true,1',],
             'justificativa_exclusao'    => ['nullable','string','required_if:aplicavel,false,0',],
             'status_implementacao'      => ['required', 
-                Rule::in(['Não iniciado', 'Em implementacao', 'Implementado', 'Não aplicável'])
+                Rule::in(['Não iniciado', 'Em implementação', 'Implementado', 'Não aplicável'])
             ],
             'evidencia'                 => ['nullable', 'string'],
             'controle_id'               => ['nullable', 'integer', 'exists:controles_seguranca,id'],

@@ -9,7 +9,7 @@ use App\Http\Requests\StoreReuniaoGestaoRequest;
 use App\Http\Requests\UpdateReuniaoGestaoRequest;
 use Illuminate\Http\Request;
 
-class ReuniaoGestaoControlle extends Controller
+class ReuniaoGestaoController extends Controller
 {
     /**
      * Display a listing of the resource.

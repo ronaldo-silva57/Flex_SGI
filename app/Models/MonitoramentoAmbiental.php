@@ -48,4 +48,12 @@ class MonitoramentoAmbiental extends Model
     {
         return $this->belongsTo(User::class, 'responsavel_id');
     }
+
+    public function indicador() {
+        return $this->belongsTo(IndicadorAmbiental::class,  'indicador_ambiental_id');
+    }
+
+    public function monitoramentos() {
+        return $this->hasMany(MonitoramentoAmbiental::class, 'indicador_ambiental_id');
+    }
 }

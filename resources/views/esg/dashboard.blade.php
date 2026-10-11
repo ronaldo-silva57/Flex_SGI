@@ -13,7 +13,7 @@
                         <h3 class="text-lg font-medium">ESG</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <!--<div class="grid grid-cols-4 gap-4">-->
+                    {{-- Grid de módulos ESG --}}
                         @php
                             $cadastrosModulos = [
                                 ['nome' => 'Indicadores ESG', 'icone' => 'fa-earth-americas', 'cor' => 'bg-emerald-700', 'rota' => route('esg_indicadores.index')],
@@ -21,9 +21,7 @@
                                 ['nome' => 'Stakeholders', 'icone' => 'fa-handshake', 'cor' => 'bg-indigo-700', 'rota' => route('stakeholders.index')],
                                 ['nome' => 'Materialidade', 'icone' => 'fa-layer-group', 'cor' => 'bg-purple-700', 'rota' => route('materialidade.index')],
                                 ['nome' => 'Vínculos Normativos', 'icone' => 'fa-link', 'cor' => 'bg-slate-800', 'rota' => route('vinculos_normativos.index')],  
-                                ['nome' => 'Inventario GEE', 'icone' => 'fa-link', 'cor' => 'bg-slate-800', 'rota' => route('inventario_gee.index')],  
-                                
-                                
+                                ['nome' => 'Inventario GEE', 'icone' => 'fa-leaf', 'cor' => 'bg-lime-600', 'rota' => route('inventario_gee.index')],      
                             ];
                         @endphp
 

@@ -17,7 +17,7 @@ use App\Http\Controllers\NaoConformidadeController;
 use App\Http\Controllers\AcaoCorretivaController;
 use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\AuditoriaItemController;
-use App\Http\Controllers\ReuniaoGestaoControlle;
+use App\Http\Controllers\ReuniaoGestaoController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\TreinamentoController;
 use App\Http\Controllers\TreinamentoUsuarioController;
@@ -43,6 +43,11 @@ use App\Http\Controllers\ObjetivoAmbientalController;
 use App\Http\Controllers\ProdutoQuimicoController;
 use App\Http\Controllers\NaoConformidadeAmbientalController;
 use App\Http\Controllers\IndicadorAmbientalController;
+use App\Http\Controllers\AnalyticsISO14001Controller;
+use App\Http\Controllers\AnalyticsISO45001Controller;
+use App\Http\Controllers\AnalyticsISO27001Controller;
+use App\Http\Controllers\AnalyticsGeralController;
+use App\Http\Controllers\RevisaoDirecaoController;
 
 use App\Http\Controllers\PlanoAcaoController;
 use App\Http\Controllers\ExameMedicoController;
@@ -50,7 +55,6 @@ use App\Http\Controllers\MudancaGestaoController;
 use App\Http\Controllers\AvaliacaoFornecedorController;
 use App\Http\Controllers\AnaliseRiscoTiController;
 use App\Http\Controllers\CipaReuniaoController;
-
 
 use App\Http\Controllers\AnaliseCausaRespostaController;
 use App\Http\Controllers\AnaliseIshikawaController;
@@ -64,6 +68,8 @@ use App\Http\Controllers\PesquisaSatisfacaoController;
 use App\Http\Controllers\PesquisaSatisfacaoRespostaController;
 use App\Http\Controllers\EquipamentoMedicaoController;
 use App\Http\Controllers\CalibracaoController;
+
+use App\Http\Controllers\AnalyticsController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -99,10 +105,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('soa_controles', SoaControleController::class);
     Route::post('soa_controles/{soa_controle}/upload-evidencia', [SoaControleController::class, 'uploadEvidencia'])
-    ->name('soa_controles.upload-evidencia');
+        ->name('soa_controles.upload-evidencia');
     Route::get('soa_controles/{soa_controle}/download-evidencia', [SoaControleController::class, 'downloadEvidencia'])
-    ->name('soa_controles.download-evidencia');
-
+        ->name('soa_controles.download-evidencia');
 
     Route::resource('normas', NormaController::class);
     Route::resource('clausulas', ClausulaController::class);
@@ -150,7 +155,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('auditorias_itens', AuditoriaItemController::class)->parameters(['auditorias_itens' => 'auditoriaItem']);
     Route::resource('auditorias', AuditoriaController::class);
     Route::resource('indicadores', IndicadorController::class)->parameters(['indicadores' => 'indicador']);
-    Route::resource('reunioes_gestao', ReuniaoGestaoControlle::class)->parameters(['reunioes_gestao' => 'reunioesGestao']);
+    Route::resource('reunioes_gestao', ReuniaoGestaoController::class)->parameters(['reunioes_gestao' => 'reunioesGestao']);
     Route::resource('documentos', DocumentoController::class);
     Route::resource('treinamentos', TreinamentoController::class);
     Route::resource('treinamentos_usuarios', TreinamentoUsuarioController::class)->parameters(['treinamentos_usuarios' => 'treinamentosUsuario']);
@@ -169,7 +174,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('materialidade', MaterialidadeController::class);
     Route::resource('vinculos_normativos', VinculoNormativoController::class);
     Route::resource('planos_acao', PlanoAcaoController::class)
-    ->parameters(['planos_acao' => 'planoAcao']);
+        ->parameters(['planos_acao' => 'planoAcao']);
 
     Route::resource('licencas_ambientais', LicencaAmbientalController::class)
         ->parameters(['licencas_ambientais' => 'licenca']);
@@ -184,13 +189,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('{produtoQuimico}/fispq/download', [ProdutoQuimicoController::class, 'downloadFispq'])
             ->name('fispq.download');
 
-        // Rota que faltava para o upload:
         Route::post('{produtoQuimico}/fispq/upload', [ProdutoQuimicoController::class, 'uploadFispq'])
             ->name('fispq.upload');
     });
 
     Route::resource('produtos_quimicos', ProdutoQuimicoController::class)
-    ->parameters(['produtos_quimicos' => 'produtoQuimico']);
+        ->parameters(['produtos_quimicos' => 'produtoQuimico']);
 
     Route::resource('nao_conformidades_ambientais', NaoConformidadeAmbientalController::class);
     Route::resource('indicadores_ambientais', IndicadorAmbientalController::class)
@@ -202,19 +206,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('avaliacoes_fornecedores', AvaliacaoFornecedorController::class)
         ->parameters(['avaliacoes_fornecedores' => 'avaliacaoFornecedor']);
 
-
     Route::resource('analises_risco_ti', AnaliseRiscoTiController::class);
     Route::resource('cipa_reunioes', CipaReuniaoController::class)
         ->parameters(['cipa_reunioes' => 'cipaReuniao']);
         
-    //Pesquisas
+    // Pesquisas
     Route::resource('pesquisas_satisfacao', PesquisaSatisfacaoController::class)
-        ->parameters(['pesquisas_satisfacao' => 'pesquisaSatisfacao',]);
+        ->parameters(['pesquisas_satisfacao' => 'pesquisaSatisfacao']);
     Route::post('pesquisas_satisfacao/{pesquisaSatisfacao}/respostas',
         [PesquisaSatisfacaoController::class, 'storeResposta']
     )->name('pesquisas_satisfacao.respostas.store');
     
-    //Rota de exportação para CSV
+    // Rota de exportação para CSV
     Route::get('respostas_pesquisa/export', [PesquisaSatisfacaoRespostaController::class, 'export'])
         ->name('respostas_pesquisa.export');
 
@@ -225,7 +228,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('equipamentos_medicao', EquipamentoMedicaoController::class);
 
     Route::resource('calibracoes', CalibracaoController::class)
-        ->parameters(['calibracoes' => 'calibracao']);;
+        ->parameters(['calibracoes' => 'calibracao']);
 
     // Histórico de Alterações (somente leitura)
     Route::resource('historico_alteracoes', HistoricoAlteracaoController::class)
@@ -235,12 +238,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboards específicos
     Route::prefix('dashboard')->group(function () {
         Route::view('/cadastros', 'cadastros.dashboard')->name('cadastros.dashboard');
+        Route::get('/cadastros/analytics', [AnalyticsGeralController::class, 'index'])->name('cadastros.analytics');  
+        
+        Route::get('/iso9001/analytics', [AnalyticsController::class, 'index'])->name('iso9001.analytics');
         Route::view('/iso9001', 'iso9001.dashboard')->name('iso9001.dashboard');
+        
         Route::view('/iso14001', 'iso14001.dashboard')->name('iso14001.dashboard');
+        Route::get('/iso14001/analytics', [AnalyticsISO14001Controller::class, 'index'])->name('iso14001.analytics');        
+        
         Route::view('/iso45001', 'iso45001.dashboard')->name('iso45001.dashboard');
+        Route::get('/iso45001/analytics', [AnalyticsISO45001Controller::class, 'index'])->name('iso45001.analytics');
+
         Route::view('/iso27001', 'iso27001.dashboard')->name('iso27001.dashboard');
+        Route::get('/iso27001/analytics', [AnalyticsISO27001Controller::class, 'index'])->name('iso27001.analytics');
+
         Route::view('/esg', 'esg.dashboard')->name('esg.dashboard');
         Route::view('/administracao', 'administracao.dashboard')->name('administracao.dashboard');
+
+        Route::get('/revisao-direcao/baixar',  [RevisaoDirecaoController::class, 'baixar'])->name('relatorios.revisao-direcao.baixar');
+
+        Route::get('/revisao-direcao/preview', [RevisaoDirecaoController::class, 'preview'])
+        ->name('relatorios.revisao-direcao.preview');
     });
 
     // Rotas de roles (somente admin)

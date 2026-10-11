@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Módulo Principal') }}
         </h2>
     </x-slot>
 
@@ -14,11 +14,11 @@
                         <h3 class="text-lg font-medium">Módulos</h3>
                     </div>
 
-                    {{-- Grid de módulos --}}
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    {{-- Grid de módulos ISO 45001--}}
                     @php
                         $modulos = [
-                            ['nome' => 'Painel Geral', 'icone' => 'fa-tachometer-alt', 'cor' => ' bg-neutral-900', 'rota' => route('painel.geral')],
+                            ['nome' => 'Painel Geral', 'icone' => 'fa-tachometer-alt', 'cor' => ' bg-neutral-900', 'rota' => route('cadastros.analytics')],
                             ['nome' => 'Geral & Estrutura', 'icone' => 'fa-layer-group', 'cor' => 'bg-blue-600', 'rota' => route('cadastros.dashboard')],
                             ['nome' => 'ISO 9001', 'icone' => 'fa-check-circle', 'cor' => 'bg-green-600' , 'rota'=> route('iso9001.dashboard')],
                             ['nome' => 'ISO 14001', 'icone' => 'fa-leaf', 'cor' => 'bg-teal-600', 'rota' => route('iso14001.dashboard')],

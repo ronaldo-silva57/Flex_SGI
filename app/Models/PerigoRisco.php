@@ -29,9 +29,10 @@ class PerigoRisco extends Model
     ];
 
     protected $casts = [
-        'probabilidade' => 'integer',
-        'severidade' => 'integer',
-        'necessita_acao' => 'boolean',
+        'probabilidade'     => 'integer',
+        'severidade'        => 'integer',
+        'necessita_acao'    => 'boolean',
+        'nivel_risco'       => 'integer',
     ];
 
     /**

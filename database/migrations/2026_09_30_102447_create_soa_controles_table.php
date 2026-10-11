@@ -30,8 +30,8 @@ return new class extends Migration
             $table->boolean('aplicavel')->default(true);
             $table->text('justificativa_inclusao')->nullable();
             $table->text('justificativa_exclusao')->nullable();
-            $table->enum('status_implementacao', ['Não iniciado', 'Em implementacao', 'Implementado', 'Não aplicável'])->default('Não iniciado');
-            $table->string('evidencia_path')->nullable()->after('evidencia');
+            $table->enum('status_implementacao', ['Não iniciado', 'Em implementação', 'Implementado', 'Não aplicável'])->default('Não iniciado');
+            $table->string('evidencia_path')->nullable();
             $table->foreignId('controle_id')
                 ->nullable()
                 ->constrained('controles_seguranca')

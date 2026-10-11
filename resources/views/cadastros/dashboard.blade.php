@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Cadastro Geral') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Geral e Estrutura') }}
+            </h2>
+            <a href="{{ route('cadastros.analytics') }}"
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                <i class="fas fa-chart-line"></i> Painel de Indicadores
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -10,10 +16,10 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-medium">Cadastro Geral</h3>
+                        <h3 class="text-lg font-medium">Geral e Estrutura</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <!--<div class="grid grid-cols-4 gap-4">-->
+                    {{-- Grid módulos gerais --}}
                     @php
                         $cadastrosModulos = [
                             ['nome' => 'Empresa', 'icone' => 'fa-building', 'cor' => 'bg-slate-700', 'rota' => route('empresas.index')],
