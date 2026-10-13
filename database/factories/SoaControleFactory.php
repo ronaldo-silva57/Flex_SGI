@@ -39,7 +39,7 @@ class SoaControleFactory extends Factory
             'justificativa_inclusao' => $this->faker->sentence(),
             'justificativa_exclusao' => null,
             'status_implementacao' => $this->faker->randomElement([
-                'Não iniciado','Em implementacao','Implementado','Não aplicável'
+                'Não iniciado','Em implementação','Implementado','Não aplicável'
             ]),
             'evidencia_path' => null,
             'controle_id' => ControleSeguranca::first()->id,

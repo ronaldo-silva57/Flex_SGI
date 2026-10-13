@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cargo;
 use App\Models\Cliente;
 use App\Models\NaoConformidadeAmbiental;
 use App\Models\Processo;
@@ -64,32 +65,32 @@ class DatabaseSeeder extends Seeder
             VinculoNormativoSeeder::class,
             MudancaGestaoSeeder::class,
             NaoConformidadeAmbientalSeeder::class,
-
             CipaReuniaoSeeder::class,
-
             PlanoAcaoSeeder::class,
             AvaliacaoFornecedorSeeder::class,
-
             PesquisaSatisfacaoSeeder::class,
             PesquisaSatisfacaoRespostaSeeder::class, 
-
             EquipamentoMedicaoSeeder::class,
-            CalibracaoSeeder::class, 
-            
+            CalibracaoSeeder::class,          
             GestaoResiduoSeeder::class,                
             ObjetivoAmbientalSeeder::class, 
-            
             ProdutoQuimicoSeeder::class,            
             IndicadorAmbientalSeeder::class,
             MonitoramentoAmbientalSeeder::class,
-
             ExameMedicoSeeder::class,
-
             AnaliseRiscoTiSeeder::class,
-
             SoaControleSeeder::class,
-
             InventarioGeeSeeder::class,
+            CargoSeeder::class,
+            CompetenciaSeeder::class,
+            CargoCompetenciaSeeder::class,
+            UsuarioCompetenciaSeeder::class,
+            CalendarioEventoSeeder::class,
+            ContratoSeeder::class,
+            ComunicacaoInternaSeeder::class,
+            ComunicacaoLeituraSeeder::class,
+            ProjetoSeeder::class,
+            ProjetoTarefaSeeder::class,
         ]);
     }
 }

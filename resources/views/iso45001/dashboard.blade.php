@@ -19,7 +19,7 @@
                         <h3 class="text-lg font-medium">ISO 45001</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <!--<div class="grid grid-cols-4 gap-4">-->
+                        {{-- Grid módulos ISO 45001 --}}
                         @php
                             $cadastrosModulos = [
                                 ['nome' => 'Perigos e Riscos', 'icone' => 'fa-biohazard', 'cor' => 'bg-amber-700', 'rota' => route('perigos_riscos.index')],

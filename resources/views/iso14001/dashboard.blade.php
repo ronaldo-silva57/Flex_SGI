@@ -19,7 +19,7 @@
                         <h3 class="text-lg font-medium">ISO 14001</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {{-- Grid módulos ISO 14001 --}}
+                        {{-- Grid módulos ISO 14001 --}}
                         @php
                             $cadastrosModulos = [
                                 ['nome' => 'Aspectos Ambientais', 'icone' => 'fa-leaf', 'cor' => 'bg-green-600', 'rota' => route('aspectos_ambientais.index')],

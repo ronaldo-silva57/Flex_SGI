@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\Auditavel;
 
 //#[Fillable(['name', 'email', 'password'])]
@@ -46,7 +47,7 @@ class User extends Authenticatable
     }
 
     // relacionamento com processos
-    public function processsosResponsaveis(): HasMany
+    public function processosResponsaveis(): HasMany
     {
         return $this->hasMany(Processo::class, 'responsavel_id');
     }
@@ -80,4 +81,20 @@ class User extends Authenticatable
         return $this->hasMany(TreinamentoUsuario::class, 'usuario_id');
     }
 
+    /**
+     * Competencias
+     */
+    public function competencias(): BelongsToMany
+    {
+        return $this->belongsToMany(Competencia::class, 'usuario_competencias')
+                    ->withPivot(['nivel_atual', 'data_obtencao', 'validade', 'observacoes'])
+                    ->withTimestamps();
+    }
+
+    public function comunicacoesLidas(): BelongsToMany
+    {
+        return $this->belongsToMany(ComunicacaoInterna::class, 'comunicacao_leituras', 'user_id', 'comunicacao_id')
+                    ->using(ComunicacaoLeitura::class)
+                    ->withPivot(['id', 'lido_em']);
+    }
 }

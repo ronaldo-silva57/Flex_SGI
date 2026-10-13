@@ -19,7 +19,7 @@
                         <h3 class="text-lg font-medium">ISO 9001</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {{-- Grid de módulos IS)9001 --}}
+                        {{-- Grid de módulos IS)9001 --}}
                         @php
                             $cadastrosModulos = [
                                 ['nome' => 'Normas', 'icone' => 'fa-book', 'cor' => 'bg-blue-700', 'rota' => route('normas.index')],

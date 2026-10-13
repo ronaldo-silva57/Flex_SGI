@@ -13,7 +13,7 @@
                         <h3 class="text-lg font-medium">ESG</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {{-- Grid de módulos ESG --}}
+                        {{-- Grid de módulos ESG --}}
                         @php
                             $cadastrosModulos = [
                                 ['nome' => 'Indicadores ESG', 'icone' => 'fa-earth-americas', 'cor' => 'bg-emerald-700', 'rota' => route('esg_indicadores.index')],

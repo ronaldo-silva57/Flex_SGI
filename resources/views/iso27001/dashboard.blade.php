@@ -19,7 +19,7 @@
                         <h3 class="text-lg font-medium">ISO 27001</h3>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {{-- Grid módulos ISO 27001 --}}
+                        {{-- Grid módulos ISO 27001 --}}
                         @php
                             $cadastrosModulos = [
                                 ['nome' => 'Ativos', 'icone' => 'fa-server', 'cor' => 'bg-cyan-700', 'rota' => route('ativos_informacao.index')],

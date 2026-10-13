@@ -71,6 +71,13 @@ use App\Http\Controllers\CalibracaoController;
 
 use App\Http\Controllers\AnalyticsController;
 
+use App\Http\Controllers\CargoController;
+use App\Http\Controllers\CompetenciaController;
+use App\Http\Controllers\CalendarioEventoController;
+use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\ComunicacaoInternaController;
+use App\Http\Controllers\ProjetoController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -180,7 +187,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->parameters(['licencas_ambientais' => 'licenca']);
     Route::post('licencas_ambientais/{licencaAmbiental}/upload', [LicencaAmbientalController::class, 'uploadArquivo'])->name('licencas_ambientais.upload');
     Route::get('licencas_ambientais/{licencaAmbiental}/download', [LicencaAmbientalController::class, 'downloadArquivo'])->name('licencas_ambientais.download');
+
+// Recursos - Módulo Geral (Cargos, Competências, Calendário, Contratos, Comunicações e Projetos)
+    Route::resource('cargos', CargoController::class)->parameters(['cargos' => 'cargo']);
+    Route::resource('competencias', CompetenciaController::class)->parameters(['competencias' => 'competencia']);
+    Route::resource('calendario', CalendarioEventoController::class)->parameters(['calendario' => 'calendarioEvento']);
+    Route::resource('contratos', ContratoController::class)->parameters(['contratos' => 'contrato']);
     
+    // Comunicações Internas + Rota de Registro de Leitura/Ciência
+    Route::post('comunicacoes/{comunicacao}/ciencia', [ComunicacaoInternaController::class, 'registrarLeitura'])
+        ->name('comunicacoes.ciencia');
+    Route::resource('comunicacoes', ComunicacaoInternaController::class)->parameters(['comunicacoes' => 'comunicacaoInterna']);
+
+    Route::post('/comunicacoes/{comunicacao}/ler', [ComunicacaoInternaController::class, 'registrarLeitura'])
+        ->name('comunicacoes.ler');
+
+    // Projetos e Kanban
+    Route::get('projetos/{projeto}/kanban', [ProjetoController::class, 'kanban'])
+        ->name('projetos.kanban');
+    Route::resource('projetos', ProjetoController::class)->parameters(['projetos' => 'projeto']);    
+
     Route::resource('gestao_residuos', GestaoResiduoController::class);
     Route::resource('objetivos_ambientais', ObjetivoAmbientalController::class);
     Route::resource('inventario_gee', InventarioGeeController::class);

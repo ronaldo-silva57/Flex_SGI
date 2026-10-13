@@ -25,6 +25,7 @@
                             ['nome' => 'Empresa', 'icone' => 'fa-building', 'cor' => 'bg-slate-700', 'rota' => route('empresas.index')],
                             ['nome' => 'Departamentos', 'icone' => 'fa-sitemap', 'cor' => 'bg-slate-600', 'rota' => route('departamentos.index')],
                             ['nome' => 'Fornecedores', 'icone' => 'fa-truck-field', 'cor' => 'bg-amber-700', 'rota' => route('fornecedores.index')],
+                            ['nome' => 'Avaliação Fornecedores', 'icone' => 'fa-star-half-stroke', 'cor' => 'bg-amber-800', 'rota' => route('avaliacoes_fornecedores.index')],
                             ['nome' => 'Clientes', 'icone' => 'fa-tasks', 'cor' => 'bg-violet-500', 'rota' => route('clientes.index')],
                             ['nome' => 'Documentos', 'icone' => 'fa-folder-open', 'cor' => 'bg-blue-600', 'rota' => route('documentos.index')],
                             ['nome' => 'Treinamentos', 'icone' => 'fa-chalkboard-user', 'cor' => 'bg-indigo-600', 'rota' => route('treinamentos.index')],
@@ -34,11 +35,13 @@
                             ['nome' => 'Riscos e Oportunidades', 'icone' => 'fa-scale-balanced', 'cor' => 'bg-amber-600', 'rota' => route('riscos_oportunidades.index')],
                             ['nome' => 'Auditorias', 'icone' => 'fa-clipboard-check', 'cor' => 'bg-violet-600', 'rota' => route('auditorias.index')],
                             ['nome' => 'Auditorias Itens', 'icone' => 'fa-tasks', 'cor' => 'bg-violet-500', 'rota' => route('auditorias_itens.index')],
-
-
                             ['nome' => 'Planos de Ação (5W2H)', 'icone' => 'fa-tasks', 'cor' => 'bg-emerald-600', 'rota' => route('planos_acao.index')],
                             ['nome' => 'Gestão de Mudanças', 'icone' => 'fa-code-compare', 'cor' => 'bg-blue-600', 'rota' => route('mudancas_gestao.index')],
-                            ['nome' => 'Avaliação Fornecedores', 'icone' => 'fa-star-half-stroke', 'cor' => 'bg-amber-800', 'rota' => route('avaliacoes_fornecedores.index')],
+                            ['nome' => 'Cargos', 'icone' => 'fa-user-tie', 'cor' => 'bg-blue-600', 'rota' => route('cargos.index')],
+                            ['nome' => 'Competências', 'icone' => 'fa-lightbulb', 'cor' => 'bg-emerald-600', 'rota' => route('competencias.index')],
+                            ['nome' => 'Calendário de Eventos', 'icone' => 'fa-calendar-days', 'cor' => 'bg-indigo-600', 'rota' => route('calendario.index')],
+                            ['nome' => 'Contratos', 'icone' => 'fa-file-signature', 'cor' => 'bg-amber-700', 'rota' => route('contratos.index')],
+                            ['nome' => 'Comunicações', 'icone' => 'fa-comments', 'cor' => 'bg-rose-600', 'rota' => route('comunicacoes.index')],
                         ];
                     @endphp
 
