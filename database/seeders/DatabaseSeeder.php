@@ -91,6 +91,11 @@ class DatabaseSeeder extends Seeder
             ComunicacaoLeituraSeeder::class,
             ProjetoSeeder::class,
             ProjetoTarefaSeeder::class,
+            EsgRelatorioSeeder::class,
+            EsgProjetoSocialSeeder::class,
+            EsgDiversidadeSeeder::class,
+            EsgGovernancaMembroSeeder::class,
+            EsgFornecedorDueDiligenceSeeder::class,
         ]);
     }
 }

@@ -11,24 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fornecedores', function (Blueprint $table) {
+        Schema::create('empresas', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo', 50);
+            $table->string('codigo', 50)->nullable();
             $table->string('razao_social');
             $table->string('nome_fantasia')->nullable();
-            $table->string('cnpj', 20)->nullable();
-            $table->string('contato_nome')->nullable();
-            $table->string('contato_email')->nullable();
-            $table->string('contato_telefone', 20)->nullable();
+            $table->string('cnpj', 20)->unique()->nullable();
+            $table->string('ie', 20)->nullable();
             $table->text('endereco')->nullable();
-            $table->string('categoria', 100)->nullable();
-            $table->tinyInteger('avaliacao_risco')->nullable()->check('avaliacao_risco BETWEEN 1 AND 5');
+            $table->string('cidade', 100)->nullable();
+            $table->char('estado', 2)->nullable();
+            $table->string('cep', 10)->nullable();
+            $table->string('telefone', 20)->nullable();
+            $table->string('email')->nullable();
             $table->boolean('ativo')->default(true);
             $table->timestampsTz();
             $table->softDeletes();
 
-            $table->index('cnpj');
+            $table->index('razao_social');
             $table->index('ativo');
+            $table->index('deleted_at');
         });
     }
 
@@ -37,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fornecedores');
+        Schema::dropIfExists('empresas');
     }
 };

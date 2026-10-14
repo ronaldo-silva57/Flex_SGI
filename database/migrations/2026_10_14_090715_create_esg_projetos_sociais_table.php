@@ -11,34 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('auditorias', function (Blueprint $table) {
+        Schema::create('esg_projetos_sociais', function (Blueprint $table) {
             $table->id();
             $table->foreignId('empresa_id')
                 ->constrained('empresas')
                 ->cascadeOnDelete();
-            $table->foreignId('norma_id')
-                ->nullable()
-                ->constrained('normas')
-                ->nullOnDelete();
-            $table->foreignId('auditor_lider_id')
+            $table->foreignId('responsavel_id')
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
-            $table->enum('tipo', ['Interna', 'Externa', 'Terceira parte']);
-            $table->text('escopo')->nullable();
-            $table->text('objetivo')->nullable();
+            $table->string('nome_projeto');
+            $table->text('descricao')->nullable();
+            $table->string('localidade', 150)->nullable();
             $table->date('data_inicio')->nullable();
             $table->date('data_fim')->nullable();
-            $table->enum('status', ['Planejada', 'Em andamento', 'Concluída', 'Cancelada'])->default('Planejada');
-            $table->text('relatorio')->nullable();
+            $table->decimal('orcamento_investido', 12, 6)->default(0);
+            $table->integer('beneficiarios_diretos')->default(0);
+            $table->enum('status', ['Planejado', 'Em Andamento', 'Concluído', 'Cancelado'])->default('Planejado');
             $table->timestampsTz();
             $table->softDeletes();
 
-            $table->index('empresa_id');
-            $table->index('norma_id');
-            $table->index('auditor_lider_id');
             $table->index('status');
-            $table->index('tipo');
+            $table->index('localidade');
         });
     }
 
@@ -47,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('auditorias');
+        Schema::dropIfExists('esg_projetos_sociais');
     }
 };

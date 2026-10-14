@@ -71,6 +71,8 @@ use App\Http\Controllers\CalibracaoController;
 
 use App\Http\Controllers\AnalyticsController;
 
+use App\Http\Controllers\EsgRelatorioController;
+
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\CompetenciaController;
 use App\Http\Controllers\CalendarioEventoController;
@@ -233,6 +235,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->parameters(['avaliacoes_fornecedores' => 'avaliacaoFornecedor']);
 
     Route::resource('analises_risco_ti', AnaliseRiscoTiController::class);
+
+    Route::resource('esg_relatorios', EsgRelatorioController::class);  
+
     Route::resource('cipa_reunioes', CipaReuniaoController::class)
         ->parameters(['cipa_reunioes' => 'cipaReuniao']);
         

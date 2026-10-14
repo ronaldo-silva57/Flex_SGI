@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('treinamentos', function (Blueprint $table) {
+        Schema::create('esg_relatorios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('empresa_id')
                 ->constrained('empresas')
@@ -20,19 +20,18 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
-            $table->string('titulo');
-            $table->text('descricao')->nullable();
-            $table->text('conteudo')->nullable();
-            $table->integer('carga_horaria')->nullable();
-            $table->enum('tipo', ['Obrigatório', 'Recomendado', 'Capacitação']);
-            $table->integer('validade_meses')->nullable();
-            $table->enum('status', ['Ativo', 'Inativo'])->default('Ativo');
+            $table->string('titulo'); // Ex: Relatório Anual de Sustentabilidade 2025
+            $table->enum('framework', ['GRI', 'SASB', 'TCFD', 'Global Compact', 'Outro']);
+            $table->integer('ano_referencia');
+            $table->enum('status', ['Rascunho', 'Em Revisão', 'Auditado', 'Publicado'])->default('Rascunho');
+            $table->date('data_publicacao')->nullable();
+            $table->text('arquivo_path')->nullable();
+            $table->text('observacoes')->nullable();
             $table->timestampsTz();
             $table->softDeletes();
 
-            $table->index('empresa_id');
-            $table->index('responsavel_id');
-            $table->index('status');
+            $table->index(['empresa_id', 'ano_referencia']);
+            $table->index('framework');
         });
     }
 
@@ -41,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('treinamentos');
+        Schema::dropIfExists('esg_relatorios');
     }
 };
