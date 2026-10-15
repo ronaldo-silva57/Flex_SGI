@@ -37,7 +37,7 @@
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
                         <input type="text" name="search" id="search" value="{{ request('search') }}"
-                               placeholder="Título..."
+                               placeholder="Buscar por Título..."
                                class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-purple-500 focus:border-purple-500">
                     </div>
                 </div>
@@ -53,6 +53,12 @@
                         class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">
                     <i class="fas fa-search mr-2"></i> Buscar
                 </button>
+                @if(request('search') || request('status'))
+                    <a href="{{ route('esg_monitoramentos.index') }}"
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
+                        <i class="fas fa-times mr-2"></i> Limpar
+                    </a>
+                @endif
             </form>
         </div>
 
@@ -86,7 +92,6 @@
                                 </td>   
                                 <td class="px-4 py-4 whitespace-nowrap text-right text-sm">
                                     <div class="flex justify-end items-center gap-3">
-                                        {{-- CORREÇÃO 1: Mudado de $esgrelatorios para a variável singular $esgrelatorio --}}
                                         <a href="{{ route('esg_relatorios.show', $esgrelatorio) }}"
                                            class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
                                            title="Visualizar">

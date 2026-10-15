@@ -72,6 +72,7 @@ use App\Http\Controllers\CalibracaoController;
 use App\Http\Controllers\AnalyticsController;
 
 use App\Http\Controllers\EsgRelatorioController;
+use App\Http\Controllers\EsgProjetosSociaisController;
 
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\CompetenciaController;
@@ -237,6 +238,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('analises_risco_ti', AnaliseRiscoTiController::class);
 
     Route::resource('esg_relatorios', EsgRelatorioController::class);  
+    Route::resource('esg_projetos', EsgProjetosSociaisController::class)
+        ->parameters(['esg_projetos' => 'esgProjetoSocial']);
 
     Route::resource('cipa_reunioes', CipaReuniaoController::class)
         ->parameters(['cipa_reunioes' => 'cipaReuniao']);

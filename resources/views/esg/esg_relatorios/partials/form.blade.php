@@ -8,31 +8,14 @@
         <div class="flex flex-wrap gap-4 items-end mb-4">
             {{-- Empresa --}}
             <div class="w-full md:w-[calc(50%-0.5rem)]">
-                <label for="empresa_id" class="block text-sm font-medium text-gray-700">
+                <label class="block text-sm font-medium text-gray-700">
                     Empresa <span class="text-red-500">*</span>
                 </label>
-                <div class="relative mt-1">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-building text-gray-400"></i>
-                    </div>
-                    <select id="empresa_id" name="empresa_id"
-                            class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 @error('empresa_id') border-red-300 @enderror">
-                        <option value="">Selecione a empresa</option>
-                        @if(isset($empresas) && $empresas->count())
-                            @foreach($empresas as $emp)
-                                <option value="{{ $emp->id }}"
-                                    {{ old('empresa_id', $esgRelatorio->empresa_id ?? ($empresa->id ?? '')) == $emp->id ? 'selected' : '' }}>
-                                    {{ $emp->nome ?? $emp->razao_social ?? ('Empresa #'.$emp->id) }}
-                                </option>
-                            @endforeach
-                        @elseif(isset($empresa))
-                            <option value="{{ $empresa->id }}" selected>
-                                {{ $empresa->nome ?? $empresa->razao_social ?? ('Empresa #'.$empresa->id) }}
-                            </option>
-                        @endif
-                    </select>
+                <div class="mt-1 flex items-center gap-2 p-2 border border-gray-200 rounded-md bg-gray-50">
+                    <i class="fas fa-building text-gray-400"></i>
+                    <span class="text-gray-700">{{ $empresa->razao_social ?? 'Empresa não definida' }}</span>
                 </div>
-                @error('empresa_id') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                <input type="hidden" name="empresa_id" value="{{ $empresa->id }}">
             </div>
 
             {{-- Responsável --}}
