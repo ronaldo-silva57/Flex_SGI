@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\EsgDiversidade;
 use App\Models\Empresa;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,7 @@ class EsgDiversidadeFactory extends Factory
     {
         return [
             'empresa_id'                => Empresa::first()?->id,
+            'responsavel_id'            => User::first(),
             'ano_referencia'            => $this->faker->year(),
             'categoria_cargo'           => $this->faker->randomElement(['Diretoria', 'Gerência', 'Operacional']),
             'genero'                    => $this->faker->randomElement(['Feminino', 'Masculino', 'Outro', 'Não informado']),

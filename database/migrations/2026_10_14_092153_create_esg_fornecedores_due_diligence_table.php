@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('empresa_id')
                 ->constrained('empresas')
                 ->cascadeOnDelete();
+            $table->foreignId('responsavel_id')
+                ->nullable()
+                ->constrained('user')
+                ->nullOnDelete();
             //Vinculado ao stakeholders
             $table->foreignId('stakeholder_id')
                 ->nullable()

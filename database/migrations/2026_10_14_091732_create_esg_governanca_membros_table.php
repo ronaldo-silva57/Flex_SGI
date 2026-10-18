@@ -14,6 +14,11 @@ return new class extends Migration
                 ->constrained('empresas')
                 ->cascadeOnDelete();
 
+            $table->foreignId('responsavel_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
             $table->string('nome');
             $table->enum('orgao', ['Conselho de Administração', 'Diretoria Executiva', 'Comitê de Auditoria', 'Comitê ESG', 'Outro']);
             $table->string('cargo', 100); // Ex: Conselheiro Independente, Presidente

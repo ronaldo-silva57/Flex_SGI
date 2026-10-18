@@ -17,6 +17,7 @@ class EsgGovernancaMembro extends Model
 
     protected $fillable = [
         'empresa_id',
+        'responsavel_id',
         'nome',
         'orgao',
         'cargo',
@@ -34,10 +35,15 @@ class EsgGovernancaMembro extends Model
     ];
 
     /**
-     * Relacionamento
+     * Relacionamentos
      */
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class);
+    }
+
+    public function responsavel(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'responsavel_id');
     }
 }

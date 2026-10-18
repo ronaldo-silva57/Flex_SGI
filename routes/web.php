@@ -73,6 +73,8 @@ use App\Http\Controllers\AnalyticsController;
 
 use App\Http\Controllers\EsgRelatorioController;
 use App\Http\Controllers\EsgProjetosSociaisController;
+use App\Http\Controllers\EsgDiversidadeController;
+use App\Http\Controllers\EsgGovernancaMembroController;
 
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\CompetenciaController;
@@ -240,6 +242,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('esg_relatorios', EsgRelatorioController::class);  
     Route::resource('esg_projetos', EsgProjetosSociaisController::class)
         ->parameters(['esg_projetos' => 'esgProjetoSocial']);
+    Route::resource('esg_diversidade', EsgDiversidadeController::class); 
+    Route::resource('esg_governanca', EsgGovernancaMembroController::class)
+        ->parameters(['esg_governanca' => 'esgGovernancaMembro']);
 
     Route::resource('cipa_reunioes', CipaReuniaoController::class)
         ->parameters(['cipa_reunioes' => 'cipaReuniao']);

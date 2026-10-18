@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('empresa_id')
                 ->constrained('empresas')
                 ->cascadeOnDelete();
+            $table->foreignId('responsavel_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
             $table->integer('ano_referencia');
             $table->string('categoria_cargo', 100); //Ex: Diretoria, Gerência, Operacional
             $table->string('genero', 50)->nullable(); //Ex: Feminino, Masculino, Outro / Não informado

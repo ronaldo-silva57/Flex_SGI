@@ -17,6 +17,7 @@ class EsgDiversidade extends Model
 
     protected $fillable = [
         'empresa_id',
+        'responsavel_id',
         'ano_referencia',
         'categoria_cargo',
         'genero',
@@ -32,10 +33,15 @@ class EsgDiversidade extends Model
     ];
 
     /**
-     * Relacionamento
+     * Relacionamentos
      */
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class);
+    }
+
+    public function responsavel(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'responsavel_id');
     }
 }

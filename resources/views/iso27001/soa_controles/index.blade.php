@@ -145,7 +145,7 @@
                                         <a href="{{ route('soa_controles.show', $controle) }}"
                                            class="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-700 rounded hover:bg-blue-100"
                                            title="Visualizar">
-                                            <i class="fas fa-eye mr-1"></i>Ver
+                                            <i class="fas fa-eye mr-1"></i>Visualizar
                                         </a>
                                         <a href="{{ route('soa_controles.edit', $controle) }}"
                                            class="inline-flex items-center px-2 py-1 bg-indigo-50 text-indigo-700 rounded hover:bg-indigo-100"
