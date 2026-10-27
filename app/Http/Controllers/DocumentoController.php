@@ -7,16 +7,22 @@ use App\Models\Empresa;
 use App\Models\Processo;
 use App\Models\Norma;
 use App\Models\User;
+use App\Models\Departamento;
+use App\Models\DocumentoAnexo;
+use App\Models\DocumentoRevisao;
+use App\Models\DocumentoLeitura;
 use App\Http\Requests\StoreDocumentoRequest;
 use App\Http\Requests\UpdateDocumentoRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class DocumentoController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+public function index(Request $request)
     {
         $query = Documento::with(['empresa', 'processo', 'norma', 'responsavel']);
 
@@ -49,8 +55,9 @@ class DocumentoController extends Controller
         $processos = Processo::where('ativo', true)->orderBy('nome')->get();
         $normas = Norma::where('ativo', true)->orderBy('codigo')->get();
         $usuarios = User::orderBy('name')->get();
+        $departamentos = Departamento::orderBy('nome')->get();
 
-        return view('cadastros.documentos.create', compact('empresas', 'processos', 'normas', 'usuarios'));
+        return view('cadastros.documentos.create', compact('empresas', 'processos', 'normas', 'usuarios', 'departamentos'));
     }
 
     /**
@@ -58,17 +65,27 @@ class DocumentoController extends Controller
      */
     public function store(StoreDocumentoRequest $request)
     {
-        $data = $request->validated();
+        DB::transaction(function () use ($request) {
+            $data = $request->validated();
 
-        if ($request->hasFile('arquivo_path')) {
-            $data['arquivo_path'] = $request->file('arquivo_path')->store('documentos', 'public');
-        }
+            if ($request->hasFile('arquivo_path')) {
+                $data['arquivo_path'] = $request->file('arquivo_path')->store('documentos', 'public');
+            }
 
-        Documento::create($data);
+            $documento = Documento::create($data);
 
-        return redirect()
-            ->route('documentos.index')
-            ->with('success', 'Documento cadastrado com sucesso!');
+            // Regista automaticamente a versão inicial no histórico de revisões
+            DocumentoRevisao::create([
+                'documento_id' => $documento->id,
+                'versao' => $documento->versao ?? '1.0',
+                'alteracoes_realizadas' => 'Emissão inicial do documento.',
+                'responsavel_id' => $documento->responsavel_id ?? auth()->id(),
+                'arquivo_path' => $documento->arquivo_path,
+                'data_revisao' => now(),
+            ]);
+        });
+
+        return redirect()->route('documentos.index')->with('success', 'Documento cadastrado com sucesso!');
     }
 
     /**
@@ -76,9 +93,12 @@ class DocumentoController extends Controller
      */
     public function show(Documento $documento)
     {
-        $documento->load(['empresa', 'processo', 'norma', 'responsavel']);
+        $documento->load(['empresa', 'processo', 'norma', 'responsavel', 'revisoes.responsavel', 'aprovacoes.aprovador', 'anexos', 'leituras.usuario', 'distribuicoes.departamento']);
+        
+        $departamentos = Departamento::orderBy('nome')->get();
+        $usuarios = User::orderBy('name')->get();
 
-        return view('cadastros.documentos.show', compact('documento'));
+        return view('cadastros.documentos.show', compact('documento', 'departamentos', 'usuarios'));
     }
 
     /**
@@ -102,33 +122,75 @@ class DocumentoController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('arquivo_path')) {
-            // Remove o arquivo antigo do disco caso exista
             if ($documento->arquivo_path && Storage::disk('public')->exists($documento->arquivo_path)) {
                 Storage::disk('public')->delete($documento->arquivo_path);
             }
-
             $data['arquivo_path'] = $request->file('arquivo_path')->store('documentos', 'public');
         } else {
-            // Mantém o arquivo anterior se nenhum novo for enviado
             unset($data['arquivo_path']);
         }
 
         $documento->update($data);
 
-        return redirect()
-            ->route('documentos.index')
-            ->with('success', 'Documento atualizado com sucesso!');
+        return redirect()->route('documentos.index')->with('success', 'Documento atualizado com sucesso!');
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Documento $documento)
     {
+        if ($documento->arquivo_path && Storage::disk('public')->exists($documento->arquivo_path)) {
+            Storage::disk('public')->delete($documento->arquivo_path);
+        }
+        
         $documento->delete();
 
-        return redirect()
-            ->route('documentos.index')
-            ->with('success', 'Documento removido com sucesso!');
+        return redirect()->route('documentos.index')->with('success', 'Documento removido com sucesso!');
+    }
+
+// Métodos adicionais para o novo fluxo SGI
+    public function storeAnexo(Request $request, Documento $documento)
+    {
+        $request->validate([
+            'nome_arquivo' => 'required|string|max:255',
+            'arquivo' => 'required|file|max:10240', // max 10MB
+        ]);
+
+        $path = $request->file('arquivo')->store('documentos/anexos', 'public');
+
+        DocumentoAnexo::create([
+            'documento_id' => $documento->id,
+            'nome_arquivo' => $request->nome_arquivo,
+            'arquivo_path' => $path,
+            'usuario_id' => auth()->id(),
+        ]);
+
+        return back()->with('success', 'Anexo adicionado com sucesso!');
+    }
+
+    public function destroyAnexo(DocumentoAnexo $anexo)
+    {
+        if (Storage::disk('public')->exists($anexo->arquivo_path)) {
+            Storage::disk('public')->delete($anexo->arquivo_path);
+        }
+        $anexo->delete();
+
+        return back()->with('success', 'Anexo removido com sucesso!');
+    }
+
+    public function registrarLeitura(Request $request, Documento $documento)
+    {
+        DocumentoLeitura::updateOrCreate(
+            [
+                'documento_id' => $documento->id,
+                'usuario_id' => auth()->id(),
+            ],
+            [
+                'data_leitura' => now(),
+                'ip_address' => $request->ip(),
+            ]
+        );
+
+        return back()->with('success', 'Leitura do documento confirmada e registada com sucesso!');
     }
 }

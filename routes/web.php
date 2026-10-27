@@ -18,7 +18,9 @@ use App\Http\Controllers\AcaoCorretivaController;
 use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\AuditoriaItemController;
 use App\Http\Controllers\ReuniaoGestaoController;
+// Documentos
 use App\Http\Controllers\DocumentoController;
+
 use App\Http\Controllers\TreinamentoController;
 use App\Http\Controllers\TreinamentoUsuarioController;
 use App\Http\Controllers\RegistroLegalController;
@@ -168,7 +170,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('auditorias', AuditoriaController::class);
     Route::resource('indicadores', IndicadorController::class)->parameters(['indicadores' => 'indicador']);
     Route::resource('reunioes_gestao', ReuniaoGestaoController::class)->parameters(['reunioes_gestao' => 'reunioesGestao']);
+
+    //Documentos
+    Route::middleware(['auth'])->group(function () {
+    // Resource principal do CRUD de Documentos
     Route::resource('documentos', DocumentoController::class);
+
+    // Rotas complementares para o ciclo de vida e anexos (SGI)
+    Route::post('documentos/{documento}/anexos', [DocumentoController::class, 'storeAnexo'])->name('documentos.anexos.store');
+    Route::delete('documentos/anexos/{anexo}', [DocumentoController::class, 'destroyAnexo'])->name('documentos.anexos.destroy');
+    Route::post('documentos/{documento}/ler', [DocumentoController::class, 'registrarLeitura'])->name('documentos.ler');
+});
+
+
     Route::resource('treinamentos', TreinamentoController::class);
     Route::resource('treinamentos_usuarios', TreinamentoUsuarioController::class)->parameters(['treinamentos_usuarios' => 'treinamentosUsuario']);
     Route::resource('registros_legais', RegistroLegalController::class)->parameters(['registros_legais' => 'registro']);

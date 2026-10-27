@@ -18,6 +18,7 @@ class EsgFornecedorDueDiligence extends Model
 
     protected $fillable = [
         'empresa_id',
+        'responsavel_id',
         'stakeholder_id',
         'nome_fornecedor',
         'cnpj_fornecedor',

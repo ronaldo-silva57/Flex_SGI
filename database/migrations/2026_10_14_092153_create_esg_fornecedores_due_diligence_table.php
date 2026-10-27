@@ -18,7 +18,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->foreignId('responsavel_id')
                 ->nullable()
-                ->constrained('user')
+                ->constrained('users')
                 ->nullOnDelete();
             //Vinculado ao stakeholders
             $table->foreignId('stakeholder_id')

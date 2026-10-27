@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\Auditavel;
 
 class Documento extends Model
@@ -31,8 +32,8 @@ class Documento extends Model
     ];
 
     protected $casts = [
-        'data_aprovacao' => 'date',
-        'data_revisao' => 'date',
+        'data_aprovacao'    => 'date',
+        'data_revisao'      => 'date',
     ];
 
     /**
@@ -56,5 +57,51 @@ class Documento extends Model
     public function responsavel(): BelongsTo
     {
         return $this->belongsTo(User::class, 'responsavel_id');
+    }
+
+    public function revisoes(): HasMany
+    {
+        return $this->hasMany(DocumentoRevisao::class)->orderByDesc('data_revisao');
+    }
+
+    public function aprovacoes(): HasMany
+    {
+        return $this->hasMany(DocumentoAprovacao::class);
+    }
+
+    public function distribuicoes(): HasMany
+    {
+        return $this->hasMany(DocumentoDistribuicao::class);
+    }
+
+    public function leituras(): HasMany
+    {
+        return $this->hasMany(DocumentoLeitura::class);
+    }
+
+    public function anexos(): HasMany
+    {
+        return $this->hasMany(DocumentoAnexo::class);
+    }
+
+    /**
+     * Helpers de workflw
+     */
+    public function podeSerAprovado(): bool
+    {
+        return $this->aprovacoes()->where('status', 'Pendente')->count() === 0
+            && $this->aprocacoes()->where('status', 'Rejeitado')->count() === 0
+            && $this->aprocacoes()->count() > 0;
+    }
+
+    public function estaAprovado(): bool
+    {
+        return $this->status === 'Aprovado';
+    }
+
+    public function proximaVersao(): string
+    {
+        [$maior, $menor] = array_pad(explode('.', $this->versao), 2, 0);
+        return $maior . '.' . ((int)$menor + 1);
     }
 }

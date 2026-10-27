@@ -29,6 +29,8 @@ return new class extends Migration
             $table->index('responsavel_id');
             $table->index(['empresa_id', 'ativo']);
             $table->index('deleted_at');
+
+            $table->unique('codigo');
         });
     }
 
